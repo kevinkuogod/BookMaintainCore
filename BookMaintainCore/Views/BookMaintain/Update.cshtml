@@ -1,0 +1,261 @@
+﻿<!-- 橫幅bar -->
+<div class="row">
+    <div class="text-bg-secondary p-3" id="serch_error" style="">編輯書本</div>
+</div>
+<!-- indexForm -->
+<!-- windows用蓋的，有資料就重蓋 -->
+<form id="insertForm" class="row g-3 needs-validation was-validated" novalidate="">
+    @Html.AntiForgeryToken()
+</form>
+<!-- 按鍵處理 -->
+<div class="row">
+    <div id="transferForm" class="row"></div>
+</div>
+<div class="modal" tabindex="-1" id="alertModal"></div>
+<div class="modal" tabindex="-1" id="insertCheckModal"></div>
+
+<script>
+    //可以直接調用show
+    let myModal = {
+        alertModal: null,
+        insertCheckModal: null
+    };
+
+    let bootStarpTmp = {
+        indexBookName: [],
+        indexBookName2: {}
+    };
+
+    function initBeforeSearch() {
+        //要刪除
+        //get可能會有問題
+        let alertObjet = [
+            {
+                key: "alertModal",
+                title: "圖書維護提示",
+                objectName: "window",
+                template: '<p id="alertMessage"></p>',
+                button: {
+                    button1: {
+                        'type': "button",
+                        'class': "btn btn-secondary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "關閉"
+                    },
+                    button2: {
+                        'type': "button",
+                        'class': "btn btn-primary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "我已了解"
+                    },
+                }
+            },
+            {
+                key: "insertCheckModal",
+                title: "確認送出",
+                objectName: "window",
+                template: '<p id="insertCheckMessage">確定送出</p>',
+                button: {
+                    button1: {
+                        'type': "button",
+                        'class': "btn btn-secondary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "關閉"
+                    },
+                    button2: {
+                        'type': "button",
+                        'class': "btn btn-primary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "送出",
+                        'method': {
+                            onclick: 'implementAjax("/BookMaintain/Insert", "insertJson");'
+                        }
+                    },
+                }
+            }
+        ];
+        createObjet(alertObjet);
+
+        //驗證就不要上label
+
+        let insertFormObjet = [
+            {
+                key: "insertBookName",
+                objectName: "lable",
+                labelName: "書名",
+                gropName: 'BookNameGrop',
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertBookName",
+                name: "BOOK_NAME",
+                objectName: "autoComplete",
+                labelName: "書名集",
+                gropName: 'BookNameGrop',
+                placeholder: "書名 ...",
+                data: {
+                    'type': "bookName"
+                },
+                validation: {
+                    message: "請輸入書名"
+                }
+            },
+            {
+                key: "insertAuthor",
+                objectName: "lable",
+                labelName: "作者",
+                gropName: 'AuthorGrop',
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertAuthor",
+                name: "BOOK_AUTHOR",
+                objectName: "autoComplete",
+                placeholder: "作者 ...",
+                labelName: "作者集",
+                gropName: 'AuthorGrop',
+                validation: {
+                    message: "請輸入作者"
+                }
+            },
+            {
+                key: "insertBookPublisher",
+                objectName: "lable",
+                labelName: "出版商",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertBookPublisher",
+                name: "BOOK_PUBLISHER",
+                objectName: "autoComplete",
+                placeholder: "出版商 ...",
+                labelName: "出版商",
+                validation: {
+                    message: "請輸入出版商"
+                }
+            },
+            {
+                key: "insertBookNote",
+                objectName: "lable",
+                labelName: "內容簡介",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertBookNote",
+                name: "BOOK_NOTE",
+                objectName: "textArea",
+                labelName: "內容簡介",
+                placeholder: "內容簡介 ...",
+                validation: {
+                    message: "請輸入內容簡介"
+                }
+            },
+            {
+                key: "insertCodeId",
+                objectName: "lable",
+                labelName: "借閱狀態",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertCodeId",
+                name: "CODE_ID",
+                link: "/BookMaintain/getFormSelectData",
+                objectName: "dropDownList",
+                labelName: "借閱狀態",
+                data: {
+                    'type': "codeIdText"
+                },
+                validation: {
+                    message: "請輸入借閱狀態"
+                }
+            },
+            {
+                key: "insertBookBoughtDate",
+                objectName: "lable",
+                labelName: "購書日期"
+            },
+            {
+                key: "insertBookBoughtDate",
+                name: "BOOK_BOUGHT_DATE",
+                labelName: "購書日期",
+                objectName: "dateInput",
+                type: "datetime-local",
+                validationMessage: "請輸入購書日期",
+                value: "年/月/日 -- --:--"
+            },
+            {
+                labelName: "圖書類別",
+                key: "insertBookClassId",
+                objectName: "lable",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+
+                key: "insertBookClassId",
+                name: "BOOK_CLASS_ID",
+                labelName: "圖書類別",
+                objectName: "dropDownList",
+                link: "/BookMaintain/getFormSelectData?type=bookClassIdText",
+                validation: {
+                    message: "請輸入圖書類別"
+                }
+            },
+        ];
+        createObjet(insertFormObjet, "insertForm");
+        processObjet(insertFormObjet);
+
+        let returnFormObjet = [
+            {
+                labelName: "返回",
+                key: "getTableMainData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: 'cangeUrl("/BookMaintain/Index");'
+                },
+                liKey: "insertFromButton"
+            },
+            {
+                labelName: "清除",
+                key: "removeTableData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "clearFromData([insertBookName, insertAuthor,insertBookPublisher, \
+                                             insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "insertFromButton"
+            },
+            {
+                labelName: "新增",
+                key: "initInsert",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "validation([insertBookName, insertAuthor,insertBookPublisher, \
+                                          insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "insertFromButton",
+                modelName: "insertCheckModal"
+            }
+        ]
+        createObjet(returnFormObjet, "transferForm");
+    }
+    initBeforeSearch();
+</script>

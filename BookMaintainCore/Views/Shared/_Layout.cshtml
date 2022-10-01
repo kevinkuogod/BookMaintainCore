@@ -1,0 +1,96 @@
+﻿<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.98.0">
+    <title>Fixed top navbar example · Bootstrap v5.2</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/navbar-fixed/">
+    <script src="~/js/jquery-3.6.0.js"></script>
+    <!--
+     <script src="~/Scripts/popperjs.js"></script>
+     <link href="~/Content/css/bootstrap.css" rel="stylesheet">
+     <script src="~/Scripts/js/bootstrap.js"></script>
+     -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/bootstrap.js" charset="big5"></script>
+    <!-- gb2312 會亂碼 big5 正常 utf8失敗，本身就使用utf8儲存-->
+    <!-- Favicons -->
+    <meta name="theme-color" content="#712cf9">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand link-primary" href="/BookMaintain/Index">圖書維護系統</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active link-primary" aria-current="page" href="#">總查詢</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link-primary" href="/Vocabulary/Index">單字CURD(未做)</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle link-primary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            軟體服務
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item link-primary" href="#">聲控文</a></li>
+                            <li><a class="dropdown-item link-primary" href="#">註冊喜好</a></li>
+                            <li><hr class="dropdown-divider link-primary"></li>
+                            <li><a class="dropdown-item link-primary" href="#">待續</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <!-- 需要做到線上，登入才能聯絡 -->
+                        <a class="nav-link disabled link-primary">聯絡客服</a>
+                    </li>
+                </ul>
+                <!-- d-flex:可以方navbar右邊 -->
+                <button class="btn btn-outline-success d-flex" onclick='cangeUrl("/Login/Index")'>登入</button>
+                <button class="btn btn-outline-success d-flex" onclick='cangeUrl("/Login/Logout")'>登出</button>
+            </div>
+        </div>
+    </nav>
+
+    <!--可以改 Offcanvas  w3c school也可以自己找片亮一點的套
+    <div class="offcanvas offcanvas-start show" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel" aria-modal="true" role="dialog">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p>Try scrolling the rest of the page to see this option in action.</p>
+        </div>
+    </div>
+    -->
+    <main class="container">
+        <div class="bg-light p-5 rounded">
+            @RenderBody()
+        </div>
+        <footer>
+            <p>&copy; @DateTime.Now.Year - 廢材工程師</p>
+        </footer>
+    </main>
+    <!--
+    點選聯絡客服要出現
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body scrolling</button>
+
+    <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Offcanvas with body scrolling</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <p>Try scrolling the rest of the page to see this option in action.</p>
+        </div>
+    </div>
+    -->
+</body>
+</html>

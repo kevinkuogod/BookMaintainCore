@@ -1,0 +1,378 @@
+﻿<!-- 橫幅bar -->
+<div class="row">
+    <div class="text-bg-secondary p-3" id="serch_error" style="">新增書本</div>
+</div>
+<!-- indexForm -->
+<!-- windows用蓋的，有資料就重蓋 -->
+<form id="insertForm" class="row g-3 needs-validation was-validated" novalidate="">
+    @Html.AntiForgeryToken()
+</form>
+<!-- 按鍵處理 -->
+<div class="row">
+    <div id="transferForm" class="row"></div>
+</div>
+<div class="modal" tabindex="-1" id="alertModal"></div>
+<div class="modal" tabindex="-1" id="insertCheckModal"></div>
+
+<!-- Flexbox container for aligning the toasts -->
+<!--<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">-->
+<!-- Then put toasts within -->
+<!--<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="..." class="rounded me-2" alt="...">
+            <strong class="me-auto">Bootstrap</strong>
+            <small>11 mins ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Hello, world! This is a toast message.
+        </div>
+    </div>
+</div>-->
+<!---------------------------------------------------------------------------------------------------------------------------------浮動視窗-->
+<!--
+insert update 要上
+https://getbootstrap.com/docs/5.2/components/popovers/
+提示視窗
+    https://getbootstrap.com/docs/5.2/components/toasts/
+-->
+<!-- Button trigger modal -->
+<!--
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Launch static backdrop modal
+</button>
+-->
+<!-- Vertically centered scrollable modal -->
+<!--
+<div id="staticBackdrop" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    ...
+</div>
+ -->
+<!--
+文章list
+https://getbootstrap.com/docs/5.2/components/spinners/
+Spinners
+-->
+<script>
+    //可以直接調用show
+    let myModal = {
+        alertModal: null,
+        insertCheckModal: null
+    };
+
+    let bootStarpTmp = {
+        indexBookName: [],
+        indexBookName2: {}
+    };
+
+    /*
+    錯誤提示參考alert正確版
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+        Well done!
+        </h4>
+        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        <hr>
+            <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+    </div>
+
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">
+        <svg xmlns="http://www.w3.org/2000/svg" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+        Well done!
+        </h4>
+        <p id="alertMessage"></p>
+        <hr>
+            <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+    </div>
+    */
+
+    function initBeforeSearch() {
+        //要刪除
+        //get可能會有問題
+        //const toast = new bootstrap.Toast($("#liveToast"));
+        //toast.show()
+        let alertObjet = [
+            {
+                key: "alertModal",
+                title: "圖書維護提示",
+                objectName: "window",
+                template: '<p id="alertMessage"></p>',
+                button: {
+                    button1: {
+                        'type': "button",
+                        'class': "btn btn-secondary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "關閉"
+                    },
+                    button2: {
+                        'type': "button",
+                        'class': "btn btn-primary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "我已了解"
+                    },
+                }
+            },
+            {
+                key: "insertCheckModal",
+                title: "確認送出",
+                objectName: "window",
+                template: '<p id="insertCheckMessage">確定送出</p>',
+                button: {
+                    button1: {
+                        'type': "button",
+                        'class': "btn btn-secondary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "關閉"
+                    },
+                    button2: {
+                        'type': "button",
+                        'class': "btn btn-primary",
+                        'data_bs_dismiss': "modal",
+                        'aria_label': "Close",
+                        'text': "送出",
+                        'method': {
+                            onclick: 'implementAjax("/BookMaintain/Insert", "insertJson");'
+                        }
+                    },
+                }
+            }
+        ];
+        createObjet(alertObjet);
+
+        //驗證就不要上label
+        
+        let insertFormObjet = [
+            {
+                //搭配下面auto
+                key: "insertBookName",
+                objectName: "lable",
+                labelName: "書名",
+                gropName: 'BookNameGrop',
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                //未來希望可以是cookie
+                //驗證要啟用visible
+                key: "insertBookName",
+                name: "BOOK_NAME",
+                objectName: "autoComplete",
+                labelName: "書名集",
+                gropName: 'BookNameGrop',
+                placeholder: "書名 ...",
+                data: {
+                    'type': "bookName"
+                },
+                validation: {
+                    message: "請輸入書名"
+                }
+            },
+            {
+                //搭配下面auto
+                key: "insertAuthor",
+                objectName: "lable",
+                labelName: "作者",
+                gropName: 'AuthorGrop',
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                //未來希望可以是cookie
+                key: "insertAuthor",
+                name: "BOOK_AUTHOR",
+                objectName: "autoComplete",
+                placeholder: "作者 ...",
+                labelName: "作者集",
+                gropName: 'AuthorGrop',
+                validation: {
+                    message: "請輸入作者"
+                }
+            },
+            {
+                //搭配下面auto
+                key: "insertBookPublisher",
+                objectName: "lable",
+                labelName: "出版商",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                //未來希望可以是cookie
+                key: "insertBookPublisher",
+                name: "BOOK_PUBLISHER",
+                objectName: "autoComplete",
+                placeholder: "出版商 ...",
+                labelName: "出版商",
+                validation: {
+                    message: "請輸入出版商"
+                }
+            },
+            {
+                //搭配下面內容簡介
+                key: "insertBookNote",
+                objectName: "lable",
+                labelName: "內容簡介",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertBookNote",
+                name: "BOOK_NOTE",
+                objectName: "textArea",
+                labelName: "內容簡介",
+                placeholder: "內容簡介 ...",
+                validation: {
+                    message: "請輸入內容簡介"
+                }
+            },
+            {
+                //搭配下面auto
+                key: "insertCodeId",
+                objectName: "lable",
+                labelName: "借閱狀態",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+                key: "insertCodeId",
+                name: "CODE_ID",
+                link: "/BookMaintain/getFormSelectData",
+                objectName: "dropDownList",
+                labelName: "借閱狀態",
+                data: {
+                    'type': "codeIdText"
+                },
+                validation: {
+                    message: "請輸入借閱狀態"
+                }
+            },
+            {
+                //搭配下面auto
+                key: "insertBookBoughtDate",
+                objectName: "lable",
+                labelName: "購書日期"
+            },
+            {
+                key: "insertBookBoughtDate",
+                name: "BOOK_BOUGHT_DATE",
+                labelName: "購書日期",
+                objectName: "dateInput",
+                type: "datetime-local",
+                validationMessage: "請輸入購書日期",
+                value: "年/月/日 -- --:--"
+            },
+            {
+                labelName: "圖書類別",
+                key: "insertBookClassId",
+                objectName: "lable",
+                validation: {
+                    validationDiv: "col-md-12 position-relative"
+                }
+            },
+            {
+
+                key: "insertBookClassId",
+                name: "BOOK_CLASS_ID",
+                labelName: "圖書類別",
+                objectName: "dropDownList",
+                link: "/BookMaintain/getFormSelectData?type=bookClassIdText",
+                validation: {
+                    message: "請輸入圖書類別"
+                }
+            },
+            /*{
+                labelName: "返回",
+                key: "getTableMainData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    //onclick: 'javascript: location.href = "/BookMaintain/Index"'
+                    onclick: 'goBack;'
+                },
+                liKey: "indexFromButton"
+            },
+            {
+                labelName: "清除",
+                key: "removeTableData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "clearFromData([insertBookName, insertAuthor,insertBookPublisher,insertBookPublisher, \
+                                                         insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "indexFromButton"
+            },
+            {
+                labelName: "新增",
+                key: "initInsert",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "validation([insertBookName, insertAuthor,insertBookPublisher,insertBookPublisher, \
+                                                         insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "indexFromButton"
+            }*/
+        ];
+        //清除日期格式
+        //圖書類別需更改，匯入
+        //上cookie
+        //相關的資料可以丟localStorage，避免重複抓取
+        createObjet(insertFormObjet, "insertForm");
+        processObjet(insertFormObjet);
+
+        //這是一解，但還是需要回填上去
+        //這個有關liKey，加上去就壞了
+        let returnFormObjet = [
+            {
+                labelName: "返回",
+                key: "getTableMainData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: 'cangeUrl("/BookMaintain/Index");'
+                },
+                liKey: "insertFromButton"
+            },
+            {
+                labelName: "清除",
+                key: "removeTableData",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "clearFromData([insertBookName, insertAuthor,insertBookPublisher, \
+                                             insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "insertFromButton"
+            },
+            {
+                labelName: "新增",
+                key: "initInsert",
+                objectName: "button",
+                class: "btn btn-secondary",
+                method: {
+                    onclick: "validation([insertBookName, insertAuthor,insertBookPublisher, \
+                                          insertBookNote, insertCodeId, insertBookBoughtDate, insertBookClassId]);",
+                },
+                liKey: "insertFromButton",
+                modelName: "insertCheckModal"
+            }
+        ]
+        createObjet(returnFormObjet, "transferForm");
+    }
+    initBeforeSearch();
+</script>

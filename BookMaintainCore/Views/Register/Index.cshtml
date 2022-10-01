@@ -1,0 +1,232 @@
+﻿<!-- 參考Floating labels -->
+<!-- 驗證搭配<div class="text-bg-danger p-3" id="serch_error" style="">Danger with contrasting color</div> -->
+<!-- Bootstarp Collapse -->
+<div class="row">
+    <div class="text-bg-secondary p-3" id="serch_error" style="">註冊頁面</div>
+</div>
+<form id="registerForm">
+    @Html.AntiForgeryToken()
+</form>
+
+<div class="row">
+    <div id="transferForm" class="row"></div>
+</div>
+<div class="modal" tabindex="-1" id="alertModal"></div>
+<div class="modal" tabindex="-1" id="registerCheckModal"></div>
+
+<script>
+    let myModal = {
+        alertModal: null,
+        registerCheckModal: null
+    };
+
+    let alertObjet = [
+        {
+            key: "alertModal",
+            title: "圖書維護提示",
+            objectName: "window",
+            template: '<p id="alertMessage"></p>',
+            button: {
+                button1: {
+                    'type': "button",
+                    'class': "btn btn-secondary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "關閉"
+                },
+                button2: {
+                    'type': "button",
+                    'class': "btn btn-primary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "我已了解"
+                },
+            }
+        },
+        {
+            key: "registerCheckModal",
+            title: "確認送出",
+            objectName: "window",
+            template: '<p id="registerCheckMessage">確定送出</p>',
+            button: {
+                button1: {
+                    'type': "button",
+                    'class': "btn btn-secondary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "關閉"
+                },
+                button2: {
+                    'type': "button",
+                    'class': "btn btn-primary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "送出",
+                    'method': {
+                        onclick: 'implementAjax("/Register/Insert", "registerJson");'
+                    }
+                },
+            }
+        }
+    ];
+    createObjet(alertObjet);
+
+    //placeholder沒給不會有上浮功能
+    let registerFormObjet = [
+        {
+            key: "floatingFirstName",
+            name: "FirstName",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'FirstName',
+            placeholder: "大明",
+            type: "text",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingFirstName);'
+            }
+        },
+        {
+            key: "floatingFirstName",
+            objectName: "lable2",
+            labelName: "顧客名稱",
+            gropName: 'FirstName'
+        },
+        {
+            key: "floatingLastName",
+            name: "LastName",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'LastName',
+            placeholder: "大明",
+            type: "text",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingLastName);'
+            }
+        },
+        {
+            key: "floatingLastName",
+            objectName: "lable2",
+            labelName: "顧客姓",
+            gropName: 'LastName'
+        },
+        {
+            key: "floatingEmail",
+            name: "Email",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'Email',
+            placeholder: "name@example.com",
+            type: "email",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingEmail);'
+            }
+        },
+        {
+            key: "floatingEmail",
+            objectName: "lable2",
+            labelName: "信箱帳號",
+            gropName: 'Email'
+        },
+        {
+            key: "floatingTelephone",
+            name: "Telephone",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'Telephone',
+            placeholder: "0900000000",
+            type: "text",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingTelephone);'
+            }
+        },
+        {
+            key: "floatingTelephone",
+            objectName: "lable2",
+            labelName: "電話名稱",
+            gropName: 'Telephone'
+        },
+        {
+            key: "floatingFAX",
+            name: "FAX",
+            objectName: "input",
+            class: "form-control is-valid",
+            gropName: 'FAX',
+            placeholder: "02-8192XXXX",
+            type: "text",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            }
+        },
+        {
+            key: "floatingFAX",
+            objectName: "lable2",
+            labelName: "傳真",
+            gropName: 'FAX'
+        },
+        {
+            key: "floatingPassword",
+            name: "Password",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'Password',
+            placeholder: "密碼",
+            type: "password",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingPassword);'
+            }
+        },
+        {
+            key: "floatingPassword",
+            objectName: "lable2",
+            labelName: "密碼",
+            gropName: 'Password'
+        }
+    ];
+    createObjet(registerFormObjet, "registerForm");
+
+    let returnFormObjet = [
+        {
+            labelName: "登入",
+            key: "getTableMainData",
+            objectName: "button",
+            class: "btn btn-secondary",
+            method: {
+                onclick: 'cangeUrl("/Login/Index");'
+            },
+            liKey: "registerFromButton"
+        },
+        {
+            labelName: "送出",
+            key: "initInsert",
+            objectName: "button",
+            class: "btn btn-secondary",
+            method: {
+                onclick: "validation([floatingFirstName, floatingLastName,floatingEmail, \
+                                          floatingTelephone, floatingFAX, floatingPassword]);",
+            },
+            liKey: "registerFromButton",
+            modelName: "registerCheckModal"
+        }
+    ]
+    createObjet(returnFormObjet, "transferForm");
+</script>
+
+<!--
+    如果帳號打對了，就先所帳號
+<input class="form-control" type="text" value="Disabled readonly input" aria-label="Disabled input example" disabled readonly>
+-->

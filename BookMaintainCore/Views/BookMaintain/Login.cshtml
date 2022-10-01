@@ -1,0 +1,145 @@
+﻿<!-- 參考Floating labels -->
+<!-- 驗證搭配<div class="text-bg-danger p-3" id="serch_error" style="">Danger with contrasting color</div> -->
+<!-- Bootstarp Collapse -->
+<div class="row">
+    <div class="text-bg-secondary p-3" id="serch_error" style="">登入頁面</div>
+</div>
+
+
+<form id="loginForm" class="row g-3 needs-validation was-validated" novalidate="">
+    <!--
+    <div class="mb-3 form-floating">
+        <input type="email" class="form-control is-valid" id="floatingInputInvalid" placeholder="name@example.com" value="test@example.com">
+        <label for="floatingInputInvalid">信箱帳號</label>
+    </div>
+    <div class="mb-3 form-floating">
+        <input type="password" class="form-control is-invalid" id="floatingInputInvalid2" placeholder="name@example.com" value="test@example.com">
+        <label for="floatingInputInvalid2">密碼</label>
+    </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+            <label class="form-check-label" for="inlineRadio1">記住我</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+            <label class="form-check-label" for="inlineRadio2">不記住我</label>
+        </div>
+    -->
+    <!-- 需要移到到後台admin -->
+    <!--
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Well done!</h4>
+        <p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer so that you can see how spacing within an alert works with this kind of content.</p>
+        <hr>
+        <p class="mb-0">Whenever you need to, be sure to use margin utilities to keep things nice and tidy.</p>
+    </div>
+    -->
+    @Html.AntiForgeryToken()
+
+    <!-- 需要時動態產生在div中
+    <div id="liveAlertPlaceholder">
+        <div>
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <div>Nice, you triggered this alert message!</div>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    -->
+    <!--
+    <button type="button" class="btn btn-primary" id="liveAlertBtn">
+        送出
+    </button>
+    -->
+</form>
+<div class="row">
+    <div id="transferForm" class="row"></div>
+</div>
+<div class="modal" tabindex="-1" id="alertModal"></div>
+<div class="modal" tabindex="-1" id="loginCheckModal"></div>
+
+
+<!--
+    如果帳號打對了，就先所帳號
+<input class="form-control" type="text" value="Disabled readonly input" aria-label="Disabled input example" disabled readonly>
+-->
+<script>
+    let myModal = {
+        alertModal: null,
+        loginCheckModal: null
+    };
+
+    let registerFormObjet = [
+        {
+            key: "floatingEmail",
+            name: "Email",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'Email',
+            placeholder: "name@example.com",
+            type: "email",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingEmail);'
+            }
+        },
+        {
+            key: "floatingEmail",
+            objectName: "lable2",
+            labelName: "信箱帳號",
+            gropName: 'Email'
+        },
+        {
+            key: "floatingPassword",
+            name: "Password",
+            objectName: "input",
+            class: "form-control is-invalid",
+            gropName: 'Password',
+            placeholder: "密碼",
+            type: "password",
+            validation: {
+                validationDiv: "mb-3 form-floating"
+            },
+            method: {
+                onkeyup: 'validation2(floatingPassword);'
+            }
+        },
+        {
+            key: "floatingPassword",
+            objectName: "lable2",
+            labelName: "密碼",
+            gropName: 'Password'
+        }
+    ];
+    createObjet(registerFormObjet, "loginForm");
+
+    let returnFormObjet = [
+        {
+            labelName: "註冊",
+            key: "getTableMainData",
+            objectName: "button",
+            class: "btn btn-secondary",
+            method: {
+                onclick: 'cangeUrl("/Register/Index");'
+            },
+            liKey: "loginFromButton"
+        },
+        {
+            labelName: "送出",
+            key: "initInsert",
+            objectName: "button",
+            class: "btn btn-secondary",
+            method: {
+                onclick: "validation([floatingEmail, floatingPassword]);",
+            },
+            liKey: "loginFromButton",
+            modelName: "loginCheckModal"
+        }
+    ]
+    createObjet(returnFormObjet, "transferForm");
+</script>

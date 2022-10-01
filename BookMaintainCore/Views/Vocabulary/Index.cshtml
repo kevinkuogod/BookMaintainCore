@@ -1,0 +1,331 @@
+﻿<h2>單字</h2>
+<div id="indexForm" class="row"></div>
+<div id="KKPhoneticSymbol">
+    <table>
+        <thead>
+            <tr>
+                <th colspan="2">KK音標</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td onclick="KKUp('i');">i</td>
+                <td onclick="KKUp('ɪ');">ɪ</td>
+                <td onclick="KKUp('e');">e</td>
+                <td onclick="KKUp('ɛ');">ɛ</td>
+                <td onclick="KKUp('æ');">æ</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('ɑ');">ɑ</td>
+                <td onclick="KKUp('o');">o</td>
+                <td onclick="KKUp('ɔ');">ɔ</td>
+                <td onclick="KKUp('u');">u</td>
+                <td onclick="KKUp('ᴜ');">ᴜ</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('ʌ');">ʌ</td>
+                <td onclick="KKUp('ə');">ə</td>
+                <td onclick="KKUp('ɪr');">ɪr</td>
+                <td onclick="KKUp('ɚ');">ɚ</td>
+                <td onclick="KKUp('ɝ');">ɝ</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('aɪ');">aɪ</td>
+                <td onclick="KKUp('aᴜ');">aᴜ</td>
+                <td onclick="KKUp('ɔɪ');">ɔɪ</td>
+                <td onclick="KKUp('p');">p</td>
+                <td onclick="KKUp('t');">t</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('k');">k</td>
+                <td onclick="KKUp('f');">f</td>
+                <td onclick="KKUp('s');">s</td>
+                <td onclick="KKUp('θ');">θ</td>
+                <td onclick="KKUp('ʃ');">ʃ</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('tʃ');">tʃ</td>
+                <td onclick="KKUp('h');">h</td>
+                <td onclick="KKUp('b');">b</td>
+                <td onclick="KKUp('d');">d</td>
+                <td onclick="KKUp('g');">g</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('v');">v</td>
+                <td onclick="KKUp('z');">z</td>
+                <td onclick="KKUp('ð');">ð</td>
+                <td onclick="KKUp('ʒ');">ʒ</td>
+                <td onclick="KKUp('dʒ');">dʒ</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('m');">m</td>
+                <td onclick="KKUp('n');">n</td>
+                <td onclick="KKUp('ŋ');">ŋ</td>
+                <td onclick="KKUp('l');">l</td>
+                <td onclick="KKUp('r');">r</td>
+            </tr>
+            <tr>
+                <td onclick="KKUp('j');">j</td>
+                <td onclick="KKUp('w');">w</td>
+                <td onclick="KKUp(',');">,</td>
+                <td onclick="KKUp('`');">`</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal" tabindex="-1" id="alertModal"></div>
+<div class="modal" tabindex="-1" id="insertCheckModal"></div>
+
+<script>
+    let myModal = {
+        alertModal: null,
+        insertCheckModal: null
+    };
+
+    let alertObjet = [
+        {
+            key: "alertModal",
+            title: "圖書維護提示",
+            objectName: "window",
+            template: '<p id="alertMessage"></p>',
+            button: {
+                button1: {
+                    'type': "button",
+                    'class': "btn btn-secondary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "關閉"
+                },
+                button2: {
+                    'type': "button",
+                    'class': "btn btn-primary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "我已了解"
+                },
+            }
+        },
+        {
+            key: "insertCheckModal",
+            title: "確認送出",
+            objectName: "window",
+            template: '<p id="insertCheckMessage">確定送出</p>',
+            button: {
+                button1: {
+                    'type': "button",
+                    'class': "btn btn-secondary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "關閉"
+                },
+                button2: {
+                    'type': "button",
+                    'class': "btn btn-primary",
+                    'data_bs_dismiss': "modal",
+                    'aria_label': "Close",
+                    'text': "送出",
+                    'method': {
+                        onclick: 'implementAjax("/Vocabulary/Insert", "insertJson");'
+                    }
+                },
+            }
+        }
+    ];
+    createObjet(alertObjet);
+
+    let indexFromObjet = [
+        {
+            key: "indexEnglishName",
+            name: "English_Name",
+            objectName: "autoComplete2",
+            placeholder: "單字英文名稱 ...",
+            labelName: "單字英文名稱"
+        },
+        {
+            key: "indexChineseName",
+            name: "Chinese_Name",
+            objectName: "autoComplete2",
+            placeholder: "單字中文名稱 ...",
+            labelName: "單字中文名稱"
+        },
+        {
+            key: "indexPartOfSpeech",
+            name: "Part_Of_Speech",
+            objectName: "autoComplete2",
+            placeholder: "單字詞性 ...",
+            labelName: "單字詞性"
+        },
+        {
+            key: "indexPartOfSpeechDetial",
+            name: "Part_Of_Speech_Detial",
+            objectName: "autoComplete2",
+            placeholder: "單字詞細項 ...",
+            labelName: "單字詞細項"
+        },
+        {
+            key: "indexExampleSentences",
+            name: "Example_Sentences",
+            objectName: "autoComplete2",
+            placeholder: "單字英文例句 ...",
+            labelName: "單字英文例句"
+        },
+        {
+            key: "indexExampleSentencesTranslation",
+            name: "Example_Sentences_Translation",
+            objectName: "autoComplete2",
+            placeholder: "單字英文例句翻譯 ...",
+            labelName: "單字英文例句翻譯"
+        },
+        {
+            key: "indexProvenance",
+            name: "Provenance",
+            objectName: "autoComplete2",
+            placeholder: "單字出處 ...",
+            labelName: "單字出處"
+        },
+        {
+            key: "indexEditor",
+            name: "Editor",
+            objectName: "autoComplete2",
+            placeholder: "主編 ...",
+            labelName: "主編"
+        },
+        {
+            key: "indexKenyonAndKnott",
+            name: "Kenyon_And_Knott",
+            objectName: "autoComplete2",
+            placeholder: "KK音標，會有UK，US的區分 ...",
+            labelName: "KK音標，會有UK，US的區分"
+        },
+        {
+            key: "indexProfessionalField",
+            name: "Professional_Field",
+            objectName: "autoComplete2",
+            placeholder: "常使用的專業領域 ...",
+            labelName: "常使用的專業領域"
+        },
+        {
+            key: "indexExtraMatters",
+            name: "Extra_Matters",
+            objectName: "autoComplete2",
+            placeholder: "額外需要注意事項 ...",
+            labelName: "額外需要注意事項"
+        },
+        {
+            key: "indexTense",
+            name: "Tense",
+            objectName: "autoComplete2",
+            placeholder: "時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無 ...",
+            labelName: "時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無"
+        },
+        {
+            key: "indexRemark",
+            name: "Remark",
+            objectName: "autoComplete2",
+            placeholder: "備註，無法區分專業領域時目前有用到 ...",
+            labelName: "備註，無法區分專業領域時目前有用到"
+        },
+        {
+            key: "indexPerfectTense",
+            name: "Perfect_Tense",
+            objectName: "autoComplete2",
+            placeholder: "時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無 ...",
+            labelName: "時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無"
+        },
+        {
+            key: "getTableMainData",
+            labelName: "單字總查詢",
+            objectName: "button",
+            class: "btn btn-secondary position-relative",
+            liKey: "indexFromButton",
+            //data與link需要一起使用，Bootstarp Badge
+            link: "/BookMaintain/getBookNumber",
+            data: {
+                'type': "newBook"
+            }
+        },
+        {
+            key: "getTableMainData",
+            labelName: "查詢重複",
+            objectName: "button",
+            class: "btn btn-secondary position-relative",
+            liKey: "indexFromButton",
+            //data與link需要一起使用，Bootstarp Badge
+            link: "/BookMaintain/getBookNumber",
+            data: {
+                'type': "newBook"
+            }
+        },
+        {
+            key: "removeTableData",
+            labelName: "清除",
+            objectName: "button",
+            class: "btn btn-secondary position-relative",
+            liKey: "indexFromButton",
+            method: {
+                onclick: "clearFromData([indexEnglishName, indexChineseName,indexPartOfSpeech, \
+                                         indexPartOfSpeechDetial, indexExampleSentences, indexExampleSentencesTranslation, indexProvenance, \
+                                         indexEditor, indexKenyonAndKnott, indexProfessionalField, indexExtraMatters, indexTense, indexRemark, indexPerfectTense]); ",
+            },
+        },
+        {
+            key: "initInsert",
+            labelName: "新增",
+            objectName: "button",
+            class: "btn btn-secondary position-relative",
+            method: {
+                onclick: "validation([indexEnglishName, indexChineseName,indexPartOfSpeech, \
+                                      indexPartOfSpeechDetial, indexExampleSentences, indexExampleSentencesTranslation, indexProvenance, \
+                                      indexEditor, indexKenyonAndKnott, indexProfessionalField, indexExtraMatters, indexTense, indexRemark, indexPerfectTense]);",
+            },
+            liKey: "insertFromButton",
+            modelName: "insertCheckModal"
+        }
+    ];
+    //相關的資料可以丟localStorage，避免重複抓取
+    //先寫死日後探討
+
+    createObjet(indexFromObjet, "indexForm");
+    //$("#indexKenyon_And_Knott").offset().top-10
+    //$("#indexKenyon_And_Knott").offset().left
+    $("#KKPhoneticSymbol").attr('style', 'float:left;background-color: red;');
+    $("#KKPhoneticSymbol").hide();
+    $("#KKPhoneticSymbol table td").attr('style', 'border: 1px solid black;');
+    $("#KKPhoneticSymbol").offset({
+        top: '-310',
+        left: '0',
+    });
+    let determineKenyon = true;
+    let startPosition = 0;
+    $("#indexKenyonAndKnott").on("click", function (e) {
+        const target = e.target
+        startPosition = target.selectionStart;
+        console.log('startPosition:' + startPosition);
+        if (determineKenyon) {
+            $("#KKPhoneticSymbol").show();
+            determineKenyon = false;
+        } else {
+            $("#KKPhoneticSymbol").hide();
+            determineKenyon = true;
+        }
+    });
+    $("#indexKenyonAndKnott").on("input", function (e) {
+        const target = e.target
+        startPosition = target.selectionStart;
+        console.log('startPosition:' + startPosition);
+        //const endPosition = target.selectionEnd;
+        //console.log('endPosition:' + endPosition);
+    });
+    function KKUp(KKvalue) {
+        console.log(startPosition);
+        if ((startPosition == 0)) {
+            $("#indexKenyonAndKnott").val($("#indexKenyonAndKnott").val() + KKvalue);
+        }else if (($("#indexKenyonAndKnott").val().length == startPosition) ) {
+            $("#indexKenyonAndKnott").val($("#indexKenyonAndKnott").val().substring(0, startPosition) + KKvalue);
+        } else {
+            let befString = $("#indexKenyonAndKnott").val().substring(0, startPosition) + KKvalue;
+            let aftString = $("#indexKenyonAndKnott").val().substring(startPosition, $("#indexKenyonAndKnott").val().length);
+            $("#indexKenyonAndKnott").val(befString + aftString);
+        }
+    }
+</script>
