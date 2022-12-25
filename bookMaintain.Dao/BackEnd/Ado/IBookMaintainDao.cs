@@ -2,7 +2,7 @@
 using bookMaintain.Model.BackEnd.Arg.Input;
 using System.Collections.Generic;
 
-namespace bookMaintain.Dao.Ado
+namespace bookMaintain.Dao.BackEnd.Ado
 {
     public interface IBookMaintainDao
     {

@@ -1,4 +1,8 @@
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//builder.Configuration.GetSection("ConnectionStrings"); 
 
 builder.Services.AddRazorPages();
 

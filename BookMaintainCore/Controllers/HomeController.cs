@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookMaintainCore.Controllers
 {
@@ -29,12 +31,10 @@ namespace BookMaintainCore.Controllers
         }*/
     }
 
-    
     public class Startup
     {
         //public IHostingEnvironment HostingEnvironment { get; private set; }
         public IConfiguration Configuration { get; private set; }
-
         public Startup(IConfiguration configuration/*, IHostingEnvironment env*/)
         {
             //this.HostingEnvironment = env;

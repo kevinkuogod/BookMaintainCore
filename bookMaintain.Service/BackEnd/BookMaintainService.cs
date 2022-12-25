@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using bookMaintain.Dao.Ado;
+﻿using bookMaintain.Dao.BackEnd.Ado;
 using bookMaintain.Model.BackEnd.Arg.BookMaintain;
 
 using bookMaintain.Model.BackEnd.Arg.Input;
@@ -11,13 +10,19 @@ namespace bookMaintain.Service
     /// </summary>
     /// <returns></returns>
     public class BookMaintainService : IBookMaintainService
-    {
+    { 
+        private IBookMaintainDao bookMaintainDao { get; set; }
         //private bookMaintain.Dao.IBookMaintainDao bookMaintainDao { get; set; }
         //private bookMaintain.Dao.IMockCodeDao mockCodeDao { get; set; }
-        private IBookMaintainDao bookMaintainDao;
+        //private IBookMaintainDao bookMaintainDao;
+        /*public BookMaintainService(BookMaintainDao bookMaintainDao)
+        {
+             this.bookMaintainDao2 = bookMaintainDao;
+        }*/
         public BookMaintainService()
         {
             this.bookMaintainDao = new BookMaintainDao();
+            //this.bookMaintainDao = bookMaintainDao;
         }
 
         /// <summary>

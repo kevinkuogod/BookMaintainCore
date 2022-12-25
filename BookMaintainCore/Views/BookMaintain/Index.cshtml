@@ -287,6 +287,7 @@
                     key: "indexBookName",
                     name: "BOOK_NAME",
                     link: "/BookMaintain/getFormInputData",
+                    type: "text",
                     objectName: "autoComplete2",
                     placeholder: "書名 ...",
                     labelName: "書名",
@@ -297,6 +298,7 @@
                 {
                     key: "indexBookClassId",
                     name: "BOOK_CLASS_ID",
+                    type: "text",
                     link: "/BookMaintain/getFormSelectData",
                     objectName: "dropDownList",
                     labelName: "圖書類別",
@@ -307,6 +309,7 @@
                 {
                     key: "indexUserId",
                     name: "BOOK_AUTHOR",
+                    type: "text",
                     link: "/BookMaintain/getFormSelectData",
                     objectName: "dropDownList",
                     labelName: "借閱人",
@@ -317,6 +320,7 @@
                 {
                     key: "indexCodeId",
                     name: "CodeId",
+                    type: "text",
                     link: "/BookMaintain/getFormSelectData",
                     objectName: "dropDownList",
                     labelName: "借閱狀態",
@@ -446,15 +450,15 @@
                         pageSize: 10,
                     },
                     columns: [
-                        { field: "BOOK_ID", title: "圖書ID", width: "70px" },
-                        { field: "BOOK_CLASS_NAME", title: "圖書類別", width: "100px" },
+                        { field: "booK_ID", title: "圖書ID", width: "70px" },
+                        { field: "booK_CLASS_NAME", title: "圖書類別", width: "100px" },
                         {
-                            field: "BOOK_NAME", title: "書名", width: "150px", template: "<a href='javascript:void (0)' onclick='bookDetail(this);' style='color:blue'><u>${BOOK_NAME}</u></a>"
+                            field: "booK_NAME", title: "書名", width: "150px", template: "<a href='javascript:void (0)' onclick='bookDetail(this);' style='color:blue'><u>${booK_NAME}</u></a>"
                         },
-                        { field: "BOOK_BOUGHT_DATE", title: "購書日期", width: "140px", format: "{0: yyyy/MM/dd}" },
-                        { field: "CODE_NAME", title: "借閱狀態", width: "130px" },
-                        { field: "USER_ENAME", title: "借閱人", width: "90px" },
-                        { field: "BOOK_AMOUNT", title: "書本數量", width: "100px", money: "origin" },
+                        { field: "booK_BOUGHT_DATE", title: "購書日期", width: "140px", format: "{0: yyyy/MM/dd}" },
+                        { field: "codE_NAME", title: "借閱狀態", width: "130px" },
+                        { field: "useR_ENAME", title: "借閱人", width: "90px" },
+                        { field: "booK_AMOUNT", title: "書本數量", width: "100px", money: "origin" },
                         { command: { text: "借閱紀錄", click: getTableBookLendRecordData }, title: "借閱紀錄", width: "140px", class: "btn btn-secondary" },
                         { command: { text: "編輯", click: updateBookMaintain }, title: "編輯", width: "140px", class: "btn btn-secondary" },
                         { command: { text: "刪除", click: deleteBook }, title: "刪除", width: "140px", class: "btn btn-secondary" },

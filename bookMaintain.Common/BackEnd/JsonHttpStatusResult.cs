@@ -1,27 +1,30 @@
 ﻿//using System.Web.Mvc;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.VisualBasic;
+using System.Resources;
 
 namespace bookMaintain.Common
 {
+
     public class JsonHttpStatusResult : JsonResult
     {
-        private readonly System.Net.HttpStatusCode _httpStatus;
-        private object Data;
-
         //自動繼承了父類的屬性
-        public JsonHttpStatusResult(object data, System.Net.HttpStatusCode httpStatus) : base(data, httpStatus)
+        private readonly System.Net.HttpStatusCode _httpStatus;
+
+        public JsonHttpStatusResult(object data, System.Net.HttpStatusCode httpStatus) : base(data)
         {
-            Data = data;
+             Value = data;
             _httpStatus = httpStatus;
         }
 
-        /*
-        public override void ExecuteResult(ControllerContext context)
+        public override Task ExecuteResultAsync(ActionContext context)
         {
-            context.RequestContext.HttpContext.Response.StatusCode = (int)_httpStatus;
-            base.ExecuteResult(context);
+            context.HttpContext.Response.StatusCode = (int)_httpStatus;
+            return base.ExecuteResultAsync(context);
         }
-        */
     }
 }

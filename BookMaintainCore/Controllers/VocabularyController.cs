@@ -5,6 +5,12 @@ using Newtonsoft.Json;
 using bookMaintain.Common;
 using bookMaintain.Model.BackEnd.Arg.Vocabulary;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using System.IO;
+using Azure.Core;
+using System.IO.Pipelines;
+using static System.Net.WebRequestMethods;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace BookMaintain.Controllers
 {
@@ -33,16 +39,67 @@ namespace BookMaintain.Controllers
             }
         }
 
+
+        /*public async Task<ActionResult> Index(string insertJson, IFormFile file)
+        {
+            IFormFile file1 = file;
+            FileInfo fi = new FileInfo(file1.FileName);
+            string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await file1.CopyToAsync(fileStream);
+            }*/
         /// <summary>
         /// 新增圖書維護(新增)
         /// </summary>
         /// <returns></returns>
+        //[RequestSizeLimit(100*1024*1024)] //限制http大小
         [HttpPost()]
+        //[Route("Vocabulary/Insert")]
         //[ValidateAntiForgeryToken]
-        public JsonResult Insert(string insertJson)
+        //List<IFormFile> files //多檔案上傳
+        public JsonResult Insert(string insertJson, IFormFile English_File)
+        //public ActionResult Insert(InsertArg English_File)
+        //public JsonResult Insert()
+        //public ActionResult Insert(string insertJson, IFormFile files)
+        //public ActionResult Insert(FormContext context)
+        //public IActionResult Index(IFormFile formData)
+        //public async Task<JsonResult> Index(string insertJson, IFormFile EnglishFile)
+        //public async Task<JsonResult> Index(IFormFile formData)
+        //public async Task<IActionResult> Index(IList<IFormFile> formData)
         {
+            //有值
+            var file = Request.Form["English_File"];
+            var fileCount = Request.Form.Files.Count;
+            IFormFile file1 = Request.Form.Files["English_File"];
+            //FileInfo fi = new FileInfo(file1.FileName);
+            //string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
+            //using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                //await file1.CopyToAsync(fileStream);
+            }
+
+            //string insertJson= "";
+            //string[] files = { "Volvo", "BMW", "Ford", "Mazda" };
             //ModelState.IsValid
-            if (string.IsNullOrEmpty(insertJson))
+            //files1 = Request.Form.Files;
+            //var file = files1.First();
+            /*foreach (var file in files1)
+            {
+                if (file.Length > 0)
+                {
+                    Console.WriteLine("友直了");
+                }
+            }*/
+            /*foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    Console.WriteLine("友直了");
+                }
+            }*/
+            //string.IsNullOrEmpty(insertJson)
+            if (string.IsNullOrEmpty("123"))
             {
                 return new JsonHttpStatusResult(
                            new { type = "insert", message = "新增值為空", code = (int)ErrorCode.ErrorCodeField.insertBookError }
@@ -52,10 +109,37 @@ namespace BookMaintain.Controllers
             {
                 try
                 {
-                    dynamic insertData = JsonConvert.DeserializeObject(insertJson);
+                    /*dynamic insertData = JsonConvert.DeserializeObject(insertJson);
                     //Model會上參數驗證
+                    string path2 = insertData.English_File.Value;
+                    FileInfo fi = new FileInfo(path2);
+                    string path = "C:\\Users\\kevin\\Desktop\\"+ fi.Name;
+                    //path2 = System.IO.Path.GetFullPath(path2);
+                    using (FileStream fileStream = System.IO.File.Open(path2, FileMode.Open, FileAccess.Read))
+                    {
+                        var stream = System.IO.File.Create(path);
+                        fileStream.CopyTo(stream);
+                    }*/
+                    /*HttpPostedFile file = Request.Files[i];
+                    HttpContext.Request.Files
+                    HttpContext.Current
+                    Request.
+                    Request.Files["userUploadedFile"];
+                    Path.GetFileName(file);
+                    var file = Request.Files[insertData.EnglishFile];
+                    using (var fileStream = System.IO.File.Create(path))
+                    {
+                        uploadStream.Seek(0, SeekOrigin.Begin);
+                        uploadStream.CopyTo(fileStream);
+                    }
+                    using (FileStream objfilestream = new FileStream(insertData.EnglishFile, FileMode.Create, FileAccess.ReadWrite))
+                    {
+                        objfilestream.CopyToAsync(path);
+                        objfilestream.CopyTo(path);
+                        objfilestream.Write(bytes, 0, bytes.Length);
+                    }*/
 
-                    InsertArg vocabularyInsert = new InsertArg()
+                    /*InsertArg vocabularyInsert = new InsertArg()
                     {
                         English_Name = insertData.English_Name.Value,
                         Chinese_Name = insertData.Chinese_Name.Value,
@@ -71,8 +155,9 @@ namespace BookMaintain.Controllers
                         Tense = insertData.Tense.Value,
                         Remark = insertData.Remark.Value,
                         Perfect_Tense = insertData.Perfect_Tense.Value
-                    };
-                    int errorNumber = vocabularyService.InsertVocabulary(vocabularyInsert);
+                    };*/
+                    int errorNumber = 0;
+                    //int errorNumber = vocabularyService.InsertVocabulary(vocabularyInsert);
                     if (errorNumber > 0)
                     {
                         return this.Json(new { type = "insert", message = "新增成功" });
@@ -87,6 +172,7 @@ namespace BookMaintain.Controllers
                 catch (Exception parameterEx)
                 {
                     Logger.Write(Logger.LogCategoryEnum.Error, parameterEx.ToString());
+                    /*return this.Json(new { type = "error", message = "新增過程錯誤" });*/
                     return new JsonHttpStatusResult(
                            new { type = "insert", message = "新增過程錯誤", code = (int)ErrorCode.ErrorCodeField.insertBookError }
                             , HttpStatusCode.InternalServerError);

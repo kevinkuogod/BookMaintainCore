@@ -22,5 +22,10 @@ namespace bookMaintain.Service
         {
             return registerDao.Insert(insertArg);
         }
+
+        public int ForgetPassword(Login forgetPasswordArg)
+        {
+            return registerDao.ForgetPassword(forgetPasswordArg);
+        }
     }
 }

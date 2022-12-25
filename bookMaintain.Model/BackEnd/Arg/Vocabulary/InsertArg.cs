@@ -71,7 +71,13 @@ namespace bookMaintain.Model.BackEnd.Arg.Vocabulary
         /// </summary>
         [DisplayName("額外需要注意事項")]
         public string Extra_Matters { get; set; }
-        
+
+        /// <summary>
+        /// 時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無
+        /// </summary>
+        [DisplayName("音檔")]
+        public IFormFile English_File { get; set; }
+
         /// <summary>
         /// 時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無
         /// </summary>
@@ -89,6 +95,5 @@ namespace bookMaintain.Model.BackEnd.Arg.Vocabulary
         /// </summary>
         [DisplayName("時態動詞完成式")]
         public string Perfect_Tense { get; set; }
-
     }
 }

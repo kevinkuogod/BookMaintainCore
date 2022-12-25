@@ -45,18 +45,45 @@ namespace bookMaintain.Common
             //return Configuration.GetSection("ConnectionStrings:DBConn").Value;
             //var test = Configuration.GetConnectionString("DBConn");
             //var test = Configuration["ConnectionStrings:DBConn"];
-            //return Configuration["ConnectionStrings:DBConn"];
+            //var test = Configuration["DBConn"];
+            //return Configuration["DBConn"];
             return DBConn;
         }
 
         public static string GetRedisConnectionString()
         {
-            return Configuration["ConnectionStrings:RedisConn"];
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json");
+            var configuration = builder.Build();
+            var collections = configuration.AsEnumerable();
+            string DBConn = "";
+            foreach (var item in collections)
+            {
+                if (item.Key.Equals("ConnectionStrings:RedisConn", StringComparison.CurrentCulture))
+                {
+                    DBConn = item.Value.ToString();
+                }
+                Console.WriteLine("{0}={1}", item.Key, item.Value);
+            }
+            return DBConn;
         }
 
         public static string Getlog4netConfPathString()
         {
-            return Configuration["appSettings:log4netConfPath"];
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddJsonFile("appsettings.json");
+            var configuration = builder.Build();
+            var collections = configuration.AsEnumerable();
+            string DBConn = "";
+            foreach (var item in collections)
+            {
+                if (item.Key.Equals("appSettings:log4netConfPath", StringComparison.CurrentCulture))
+                {
+                    DBConn = item.Value.ToString();
+                }
+                Console.WriteLine("{0}={1}", item.Key, item.Value);
+            }
+            return DBConn;
         }
     }
 }

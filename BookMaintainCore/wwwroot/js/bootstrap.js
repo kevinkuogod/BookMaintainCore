@@ -98,11 +98,13 @@ function createAutoCompleteElement(key, name, labelName, placeholder, validation
     }
 }
 
-function createAutoCompleteElement2(key, name, labelName, placeholder, validationObj) {
+function createAutoCompleteElement2(key, name, labelName, placeholder, validationObj, type) {
+    
     let inputAttr = {
         'id': key,
         'name': name,
-        'type': "text",
+        'type': type,
+        'require': validationObj,
         'placeholder': placeholder,
         'aria-label': labelName,
         'class': "form-control",
@@ -110,6 +112,11 @@ function createAutoCompleteElement2(key, name, labelName, placeholder, validatio
         'aria-label': "Recipient's " + key,
         'aria-describedby':"basic-"+key
     };
+
+    if (type == "file") {
+        inputAttr['multiple'] = 'multiple';
+    }
+
     let virtualInput = $("<input></input>").attr(inputAttr);
 
     let spanAttr = {
@@ -451,8 +458,10 @@ function createObjet(createObjetItem, groupId) {
     let virtualObject, validationObject = null;
     let test = 0;//測試用
     let countObject = 0;
+    console.log(createObjetItem);
     for (let i = 0; i < createObjetItem.length; i++) {
         test = 0;
+        console.log('type:'+createObjetItem[i].type);
         switch (createObjetItem[i].objectName) {
             case "lable":
                 virtualObject = createLable(createObjetItem[i].key, createObjetItem[i].labelName, createObjetItem[i].gropName);
@@ -466,7 +475,7 @@ function createObjet(createObjetItem, groupId) {
                 break;
             case "autoComplete2":
                 virtualObject = createAutoCompleteElement2(createObjetItem[i].key, createObjetItem[i].name, createObjetItem[i].labelName, createObjetItem[i].placeholder,
-                    createObjetItem[i].validation);
+                    createObjetItem[i].validation, createObjetItem[i].type);
                 break;
             case "window":
                 virtualObject = createWindowElement(createObjetItem[i].key, createObjetItem[i].title
@@ -567,7 +576,7 @@ function implementAutoComplete(key, data) {
 
 function implementAutoComplete2(key, data) {
     for (let i = 0; i < data.length; i++) {
-        $("#" + key + "listOptions").append('<option value="' + data[i].Text + '">' + data[i].Text +'</option>');
+        $("#" + key + "listOptions").append('<option value="' + data[i].text + '">' + data[i].text +'</option>');
     }
 }
 
@@ -578,7 +587,7 @@ function implementDropDownList(key, data) {
             optionObject = $("<option></option>").attr({ value: "" }).text("請選擇");
             $("#" + key).append(optionObject);
         }
-        optionObject = $("<option></option>").attr({ value: data[i].Value }).text(data[i].Text);
+        optionObject = $("<option></option>").attr({ value: data[i].value }).text(data[i].text);
         $("#" + key).append(optionObject);
     }
 }
@@ -603,6 +612,8 @@ function ajaxObject(key, link, type, data) {
         async: false,
         global: false,//禁止觸發全域ajax事件
         success: function (successData) {
+            console.log(type);
+            console.log(key);
             console.log(successData);
             if (successData.message == 'success') {
                 switch (type) {
@@ -932,12 +943,36 @@ function validation(validationObj) {
     //每次重刻需要部屬
     //console.log(validationObj);
     //console.log($.type(valObject)); //物件判定還是object
-    $.each(validationObj, function (keyNum, valObject) {
+    /*$.each(validationObj, function (keyNum, valObject) {
         if ((valObject.localName == 'input') || (valObject.localName == 'textarea') || (valObject.localName == 'select')) {
             systemData.data[valObject.name] = $(valObject).val();
         }
+    });*/
+    systemData.data = new FormData();
+    $.each(validationObj, function (keyNum, valObject) {
+        if ((valObject.localName == 'input') || (valObject.localName == 'textarea') || (valObject.localName == 'select')) {
+            console.log(valObject.type);
+            //systemData.data[valObject.name] = $(valObject).val();
+            //console.log(getObjUrl($(valObject).val()));
+            systemData.data.append(valObject.name, $(valObject).val());
+            /*if (valObject.type == "file") {
+                console.log(valObject.name);
+                systemData.data.append(valObject.name, $(valObject).val());
+            }*/
+        }
     });
-    //console.log(systemData.data);
+}
+
+function getObjUrl(file) {
+    var url = null;
+    if (window.createObjcectURL != undefined) {
+        url = window.createOjcectURL(file);
+    } else if (window.URL != undefined) {
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL != undefined) {
+        url = window.webkitURL.createObjectURL(file);
+    }  
+    return url;
 }
 
 function validation2(validationObj) {
@@ -958,17 +993,27 @@ function implementAjax(link, jsonTitle) {
     let type_destory = 'destory';
     let type_detail = 'detail';
     let type_update = 'update';
+    let type_login = 'login';
+    let type_error = 'error';
     let json = {};
     json[jsonTitle] = JSON.stringify(systemData.data);
+    console.log(json);
+    console.log(link);
+    console.log(systemData.data);
     $.ajax({
         type: "post",
         url: link,
-        data: json,
+        //data: json,
+        data: systemData.data,
         headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() },
-        dataType: "json",
+        processData: false, // important// 告訴jquery不要去處理發送的數據
+        //contentType: false, // important// 告訴Jquery不要去設定Content-type請求頭
+        contentType: "multipart/form-data",
+        //dataType: "json",
         success: function (successData) {
             console.log(successData);
             if (successData.message) {
+                console.log(successData);
                 switch (successData.type) {
                     case type_insert:
                         ajaxBSError(successData);
@@ -991,6 +1036,13 @@ function implementAjax(link, jsonTitle) {
                         ajaxBSError(successData);
                         break;
                     case type_detail:
+                        ajaxBSError(successData);
+                        break;
+                    case type_login:
+                        ajaxBSError(successData);
+                        //console.log($.cookie('ASPNetCroe.Cookies'));
+                        break;
+                    case type_error:
                         ajaxBSError(successData);
                         break;
                 }

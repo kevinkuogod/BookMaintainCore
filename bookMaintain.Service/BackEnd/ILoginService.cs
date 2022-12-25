@@ -5,5 +5,7 @@ namespace bookMaintain.Service
     public interface ILoginService
     {
         int Insert(Login insertArg);
+
+        int ForgetPassword(Login forgetPasswordArg);
     }
 }

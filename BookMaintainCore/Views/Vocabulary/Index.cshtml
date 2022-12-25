@@ -1,4 +1,7 @@
-﻿<h2>單字</h2>
+﻿@{
+    Layout = "_Layout2";
+}
+<h2>單字</h2>
 <div id="indexForm" class="row"></div>
 <div id="KKPhoneticSymbol">
     <table>
@@ -76,6 +79,12 @@
 <div class="modal" tabindex="-1" id="alertModal"></div>
 <div class="modal" tabindex="-1" id="insertCheckModal"></div>
 
+<form method="post" enctype="multipart/form-data">
+    <input type="text" name="insertJson" value="666" /> 
+    <input type="file" name="file" /> 
+    <button type="submit">Upload File</button>
+</form>
+
 <script>
     let myModal = {
         alertModal: null,
@@ -138,99 +147,136 @@
             key: "indexEnglishName",
             name: "English_Name",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字英文名稱 ...",
-            labelName: "單字英文名稱"
+            labelName: "單字英文名稱",
+            validation:"null"
         },
         {
             key: "indexChineseName",
             name: "Chinese_Name",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字中文名稱 ...",
-            labelName: "單字中文名稱"
+            labelName: "單字中文名稱",
+            validation:"null"
         },
         {
             key: "indexPartOfSpeech",
             name: "Part_Of_Speech",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字詞性 ...",
-            labelName: "單字詞性"
+            labelName: "單字詞性",
+            validation:"null"
         },
         {
             key: "indexPartOfSpeechDetial",
             name: "Part_Of_Speech_Detial",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字詞細項 ...",
-            labelName: "單字詞細項"
+            labelName: "單字詞細項",
+            validation:"null"
         },
         {
             key: "indexExampleSentences",
             name: "Example_Sentences",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字英文例句 ...",
-            labelName: "單字英文例句"
+            labelName: "單字英文例句",
+            validation:"null"
         },
         {
             key: "indexExampleSentencesTranslation",
             name: "Example_Sentences_Translation",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字英文例句翻譯 ...",
-            labelName: "單字英文例句翻譯"
+            labelName: "單字英文例句翻譯",
+            validation:"null"
         },
         {
             key: "indexProvenance",
             name: "Provenance",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "單字出處 ...",
-            labelName: "單字出處"
+            labelName: "單字出處",
+            validation:"null"
         },
         {
             key: "indexEditor",
             name: "Editor",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "主編 ...",
-            labelName: "主編"
+            labelName: "主編",
+            validation:"null"
         },
         {
             key: "indexKenyonAndKnott",
             name: "Kenyon_And_Knott",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "KK音標，會有UK，US的區分 ...",
-            labelName: "KK音標，會有UK，US的區分"
+            labelName: "KK音標，會有UK，US的區分",
+            validation:"null"
         },
         {
             key: "indexProfessionalField",
             name: "Professional_Field",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "常使用的專業領域 ...",
-            labelName: "常使用的專業領域"
+            labelName: "常使用的專業領域",
+            validation:"null"
         },
         {
             key: "indexExtraMatters",
             name: "Extra_Matters",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "額外需要注意事項 ...",
-            labelName: "額外需要注意事項"
+            labelName: "額外需要注意事項",
+            validation:"null"
         },
         {
             key: "indexTense",
             name: "Tense",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無 ...",
-            labelName: "時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無"
+            labelName: "時態動詞有過去簡單式、現在簡單式、未來簡單式，預設無,無,無",
+            validation:"null"
         },
         {
             key: "indexRemark",
             name: "Remark",
             objectName: "autoComplete2",
+            type: "text",
             placeholder: "備註，無法區分專業領域時目前有用到 ...",
-            labelName: "備註，無法區分專業領域時目前有用到"
+            labelName: "備註，無法區分專業領域時目前有用到",
+            validation:"null"
         },
         {
             key: "indexPerfectTense",
             name: "Perfect_Tense",
+            type: "text",
             objectName: "autoComplete2",
             placeholder: "時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無 ...",
-            labelName: "時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無"
+            labelName: "時態動詞有過去式完成式、現在完成式、未來完成式，預設無,無,無",
+            validation:"null"
+        },
+        {
+            key: "indexEnglishFile",
+            name: "English_File",
+            type: "file",
+            objectName: "autoComplete2",
+            placeholder: "檔案上傳...",
+            labelName: "檔案上傳",
+            validation:"null"
         },
         {
             key: "getTableMainData",
@@ -276,7 +322,8 @@
             method: {
                 onclick: "validation([indexEnglishName, indexChineseName,indexPartOfSpeech, \
                                       indexPartOfSpeechDetial, indexExampleSentences, indexExampleSentencesTranslation, indexProvenance, \
-                                      indexEditor, indexKenyonAndKnott, indexProfessionalField, indexExtraMatters, indexTense, indexRemark, indexPerfectTense]);",
+                                      indexEditor, indexKenyonAndKnott, indexProfessionalField, indexExtraMatters, indexTense, indexRemark, indexPerfectTense,\
+                                  indexEnglishFile]);",
             },
             liKey: "insertFromButton",
             modelName: "insertCheckModal"

@@ -6,9 +6,13 @@ using bookMaintain.Model.BackEnd.Arg.Select;
 using bookMaintain.Model.BackEnd.Arg.Input;
 using bookMaintain.Model.BackEnd.Arg.BookMaintain;
 using Microsoft.AspNetCore.Mvc;
+using static System.Net.Mime.MediaTypeNames;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BookMaintain.Controllers
 {
+    //[RoutePrefix("api/value")] //需要匯入套件
     public class BookMaintainController : Controller
     {
         //private IBookMaintainService bookMaintainService { get; set; }
@@ -29,9 +33,19 @@ namespace BookMaintain.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        //[Authorize(Roles = "Administrator")]
+        //[Authorize]
+        //[Authorize(roles = "Admin")] 使用 roles 屬性的話，就會自動讀取 ClaimTypes.Role 的內容。
+        //[Authorize(.AspNetCore.Cookies.)]
+        //[Authorize(Policy = ".AspNetCore.Cookies")]
+        //[Route("api/value/{id:int}")]
         //[AuthorizePlusAttribute]
         public ActionResult Index()
         {
+            //HttpContext.Current.Request.QueryString("456");
+            //var userInfo = new UserInfo(User.Claims.ToList()); //只有用了Authorize才能使用
+            //userInfo.Name
             try
             {
                 return View();
@@ -124,7 +138,8 @@ namespace BookMaintain.Controllers
         /// <returns></returns>
         //[HttpGet()]
         [HttpPost()]
-        //[ValidateHeaderAntiForgeryTokenAttribute]
+        //ValidateHeaderAntiForgeryTokenAttribute]
+        //[FromUri] //SelectJson json
         public JsonResult getFormSelectData(SelectJson json)
         {
             try
