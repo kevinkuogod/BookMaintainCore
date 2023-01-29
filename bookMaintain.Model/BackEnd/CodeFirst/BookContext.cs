@@ -7,6 +7,7 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Threading;
+using Microsoft.EntityFrameworkCore;
 
 namespace bookMaintain.Model.BackEnd.CodeFirst
 {
@@ -14,19 +15,21 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
     /// 以Book為主軸連結其他事務
     /// BookContext.Categories為一個DbSet，可以用函式調用貌似list的概念
     /// </summary>
-    public class BookContext : DbContext
+    public class BookContext : Microsoft.EntityFrameworkCore.DbContext
     {
-        //Category、Product可能是一張表出來的值
-        public DbSet<BookData> BookData { get; set; }
-        public DbSet<BookClass> BookClass { get; set; }
+        public BookContext(DbContextOptions<BookContext> options) : base(options)
+        {
+        }
+        public Microsoft.EntityFrameworkCore.DbSet<BookData> BookData { get; set; }
+        public Microsoft.EntityFrameworkCore.DbSet<BookClass> BookClass { get; set; }
 
        
-        public int SaveChangesCount { get; private set; }
+        /*public int SaveChangesCount { get; private set; }
         public override int SaveChanges()
         {
             this.SaveChangesCount++;
             return 1;
-        }
+        }*/
       
 
         /// <summary>
@@ -45,7 +48,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
     }
 
     
-    public static class BookContextObjectMother
+    /*public static class BookContextObjectMother
     {
         /// <summary>
         /// 可以強制轉型
@@ -265,5 +268,5 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         {
             get { return Current; }
         }
-    }
+    }*/
 }

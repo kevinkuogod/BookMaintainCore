@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using static System.Net.Mime.MediaTypeNames;
+using bookMaintain.Dao.BackEnd.Ado;
 
 namespace BookMaintain.Controllers
 {
@@ -76,16 +77,22 @@ namespace BookMaintain.Controllers
             }
         HttpContext.User.Claims.FirstOrDefault(m=>m.Type=="Account").Value;
          * */
-        public JsonResult Insert(string loginJson)
+        //public JsonResult Insert(string loginJson)
+        /*dynamic loginData = JsonConvert.DeserializeObject(loginJson);
+
+Login login = new Login()
+{
+    EMAIL = loginData.Email.Value,
+    PASSWORD = loginData.Password.Value
+};*/
+        public JsonResult Insert(Login loginJson)
         {
             try
             {
-                dynamic loginData = JsonConvert.DeserializeObject(loginJson);
-
                 Login login = new Login()
                 {
-                    EMAIL = loginData.Email.Value,
-                    PASSWORD = loginData.Password.Value
+                    EMAIL = loginJson.EMAIL,
+                    PASSWORD = loginJson.PASSWORD
                 };
 
                 if (ModelState.IsValid)

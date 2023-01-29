@@ -954,11 +954,14 @@ function validation(validationObj) {
             console.log(valObject.type);
             //systemData.data[valObject.name] = $(valObject).val();
             //console.log(getObjUrl($(valObject).val()));
-            systemData.data.append(valObject.name, $(valObject).val());
-            /*if (valObject.type == "file") {
+            if (valObject.type == "file") {
+                console.log($(valObject).prop('files')[0]);
+                systemData.data.append(valObject.name, $(valObject).prop('files')[0]);
+            } else {
                 console.log(valObject.name);
+                console.log($(valObject).val());
                 systemData.data.append(valObject.name, $(valObject).val());
-            }*/
+            }
         }
     });
 }
@@ -1000,6 +1003,7 @@ function implementAjax(link, jsonTitle) {
     console.log(json);
     console.log(link);
     console.log(systemData.data);
+    console.log($("input[name='__RequestVerificationToken']").val());
     $.ajax({
         type: "post",
         url: link,
@@ -1007,11 +1011,12 @@ function implementAjax(link, jsonTitle) {
         data: systemData.data,
         headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() },
         processData: false, // important// 告訴jquery不要去處理發送的數據
-        //contentType: false, // important// 告訴Jquery不要去設定Content-type請求頭
-        contentType: "multipart/form-data",
+        contentType: false, // important// 告訴Jquery不要去設定Content-type請求頭
+        mimeType: 'multipart/form-data',
         //dataType: "json",
         success: function (successData) {
             console.log(successData);
+            successData = JSON.parse(successData);
             if (successData.message) {
                 console.log(successData);
                 switch (successData.type) {

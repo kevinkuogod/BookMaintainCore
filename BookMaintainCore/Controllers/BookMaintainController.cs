@@ -94,7 +94,7 @@ namespace BookMaintain.Controllers
             switch (type)
             {
                 case "bookName":
-                    obj = bookMaintainService.GetInputTableBootstarp("BOOK_DATA", "Original");
+                    //obj = bookMaintainService.GetInputTableBootstarp("BOOK_DATA", "Original");
                     break;
                 default:
                     break;
@@ -114,7 +114,7 @@ namespace BookMaintain.Controllers
                 switch (type)
                 {
                     case "newBook":
-                        number = bookMaintainService.GetNetBookNumber();
+                        //number = bookMaintainService.GetNetBookNumber();
                         break;
                     default:
                         break;
@@ -219,6 +219,7 @@ namespace BookMaintain.Controllers
             }
             catch (Exception parameterEx)
             {
+                Console.WriteLine(parameterEx);
                 Logger.Write(Logger.LogCategoryEnum.Error, parameterEx.ToString());
                 return new JsonHttpStatusResult(
                     new { type = "main", message = "主表取得過程錯誤", code = (int)ErrorCode.ErrorCodeField.tableMainError }
@@ -275,7 +276,8 @@ namespace BookMaintain.Controllers
                         BOOK_BOUGHT_DATE = Convert.ToDateTime(insertData.BOOK_BOUGHT_DATE.Value).ToString("yyyy-MM-dd HH:mm:ss:fff"),
                         BOOK_CLASS_ID = insertData.BOOK_CLASS_ID.Value
                     };
-                    int errorNumber = bookMaintainService.InsertBookMaintain(bookMaintainInsert);
+                    //int errorNumber = bookMaintainService.InsertBookMaintain(bookMaintainInsert);
+                    int errorNumber = 0;
                     if (errorNumber > 0)
                     {
                         return this.Json(new { type = "insert", message = "新增成功" });
@@ -355,7 +357,8 @@ namespace BookMaintain.Controllers
                         CODE_ID = updateData.BOOK_CODE_ID.Value,
                         USER_ID = updateData.BOOK_USER_ID.Value
                     };
-                    int errorNumber = bookMaintainService.UpdateBookMaintain(bookMaintainUpdatePost);
+                    //int errorNumber = bookMaintainService.UpdateBookMaintain(bookMaintainUpdatePost);
+                    int errorNumber = 1;
                     if (errorNumber == 0)
                     {
                         return this.Json(new { type = "update", message = "更新成功" });
@@ -407,7 +410,8 @@ namespace BookMaintain.Controllers
 
                 if (errorNumber == 0)
                 {
-                    errorNumber = bookMaintainService.DeleteBookMaintain(bookId);
+                    //errorNumber = bookMaintainService.DeleteBookMaintain(bookId);
+                    errorNumber = 1;
                     if (errorNumber == 0)
                     {
                         return this.Json(new { type = "destory", message = "刪除成功", code = errorNumber });

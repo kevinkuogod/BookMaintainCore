@@ -11,6 +11,7 @@ using Azure.Core;
 using System.IO.Pipelines;
 using static System.Net.WebRequestMethods;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookMaintain.Controllers
 {
@@ -40,15 +41,6 @@ namespace BookMaintain.Controllers
         }
 
 
-        /*public async Task<ActionResult> Index(string insertJson, IFormFile file)
-        {
-            IFormFile file1 = file;
-            FileInfo fi = new FileInfo(file1.FileName);
-            string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
-            using (var fileStream = new FileStream(path, FileMode.Create))
-            {
-                await file1.CopyToAsync(fileStream);
-            }*/
         /// <summary>
         /// 新增圖書維護(新增)
         /// </summary>
@@ -58,48 +50,10 @@ namespace BookMaintain.Controllers
         //[Route("Vocabulary/Insert")]
         //[ValidateAntiForgeryToken]
         //List<IFormFile> files //多檔案上傳
-        public JsonResult Insert(string insertJson, IFormFile English_File)
-        //public ActionResult Insert(InsertArg English_File)
-        //public JsonResult Insert()
-        //public ActionResult Insert(string insertJson, IFormFile files)
-        //public ActionResult Insert(FormContext context)
-        //public IActionResult Index(IFormFile formData)
-        //public async Task<JsonResult> Index(string insertJson, IFormFile EnglishFile)
-        //public async Task<JsonResult> Index(IFormFile formData)
-        //public async Task<IActionResult> Index(IList<IFormFile> formData)
+        public async Task<JsonResult> Insert(InsertArg formData)
         {
             //有值
-            var file = Request.Form["English_File"];
-            var fileCount = Request.Form.Files.Count;
-            IFormFile file1 = Request.Form.Files["English_File"];
-            //FileInfo fi = new FileInfo(file1.FileName);
-            //string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
-            //using (var fileStream = new FileStream(path, FileMode.Create))
-            {
-                //await file1.CopyToAsync(fileStream);
-            }
-
-            //string insertJson= "";
-            //string[] files = { "Volvo", "BMW", "Ford", "Mazda" };
-            //ModelState.IsValid
-            //files1 = Request.Form.Files;
-            //var file = files1.First();
-            /*foreach (var file in files1)
-            {
-                if (file.Length > 0)
-                {
-                    Console.WriteLine("友直了");
-                }
-            }*/
-            /*foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    Console.WriteLine("友直了");
-                }
-            }*/
-            //string.IsNullOrEmpty(insertJson)
-            if (string.IsNullOrEmpty("123"))
+            if (!ModelState.IsValid)
             {
                 return new JsonHttpStatusResult(
                            new { type = "insert", message = "新增值為空", code = (int)ErrorCode.ErrorCodeField.insertBookError }
@@ -109,55 +63,27 @@ namespace BookMaintain.Controllers
             {
                 try
                 {
-                    /*dynamic insertData = JsonConvert.DeserializeObject(insertJson);
                     //Model會上參數驗證
-                    string path2 = insertData.English_File.Value;
-                    FileInfo fi = new FileInfo(path2);
-                    string path = "C:\\Users\\kevin\\Desktop\\"+ fi.Name;
-                    //path2 = System.IO.Path.GetFullPath(path2);
-                    using (FileStream fileStream = System.IO.File.Open(path2, FileMode.Open, FileAccess.Read))
+                    InsertArg vocabularyInsert = new InsertArg()
                     {
-                        var stream = System.IO.File.Create(path);
-                        fileStream.CopyTo(stream);
-                    }*/
-                    /*HttpPostedFile file = Request.Files[i];
-                    HttpContext.Request.Files
-                    HttpContext.Current
-                    Request.
-                    Request.Files["userUploadedFile"];
-                    Path.GetFileName(file);
-                    var file = Request.Files[insertData.EnglishFile];
-                    using (var fileStream = System.IO.File.Create(path))
-                    {
-                        uploadStream.Seek(0, SeekOrigin.Begin);
-                        uploadStream.CopyTo(fileStream);
-                    }
-                    using (FileStream objfilestream = new FileStream(insertData.EnglishFile, FileMode.Create, FileAccess.ReadWrite))
-                    {
-                        objfilestream.CopyToAsync(path);
-                        objfilestream.CopyTo(path);
-                        objfilestream.Write(bytes, 0, bytes.Length);
-                    }*/
+                        English_Name = formData.English_Name,
+                        Chinese_Name = formData.Chinese_Name,
+                        Part_Of_Speech = formData.Part_Of_Speech,
+                        Part_Of_Speech_Detial = formData.Part_Of_Speech_Detial,
+                        Example_Sentences = formData.Example_Sentences,
+                        Example_Sentences_Translation = formData.Example_Sentences_Translation,
+                        Provenance = formData.Provenance,
+                        Editor = formData.Editor,
+                        Kenyon_And_Knott = formData.Kenyon_And_Knott,
+                        Professional_Field = formData.Professional_Field,
+                        Extra_Matters = formData.Extra_Matters,
+                        Tense = formData.Tense,
+                        Remark = formData.Remark,
+                        Perfect_Tense = formData.Perfect_Tense,
+                        English_File = formData.English_File
+                    };
 
-                    /*InsertArg vocabularyInsert = new InsertArg()
-                    {
-                        English_Name = insertData.English_Name.Value,
-                        Chinese_Name = insertData.Chinese_Name.Value,
-                        Part_Of_Speech = insertData.Part_Of_Speech.Value,
-                        Part_Of_Speech_Detial = insertData.Part_Of_Speech_Detial.Value,
-                        Example_Sentences = insertData.Example_Sentences.Value,
-                        Example_Sentences_Translation = insertData.Example_Sentences_Translation.Value,
-                        Provenance = insertData.Provenance.Value,
-                        Editor = insertData.Editor.Value,
-                        Kenyon_And_Knott = insertData.Kenyon_And_Knott.Value,
-                        Professional_Field = insertData.Professional_Field.Value,
-                        Extra_Matters = insertData.Extra_Matters.Value,
-                        Tense = insertData.Tense.Value,
-                        Remark = insertData.Remark.Value,
-                        Perfect_Tense = insertData.Perfect_Tense.Value
-                    };*/
-                    int errorNumber = 0;
-                    //int errorNumber = vocabularyService.InsertVocabulary(vocabularyInsert);
+                    int errorNumber = vocabularyService.InsertVocabulary(vocabularyInsert);
                     if (errorNumber > 0)
                     {
                         return this.Json(new { type = "insert", message = "新增成功" });

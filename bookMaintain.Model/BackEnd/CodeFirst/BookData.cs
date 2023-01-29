@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bookMaintain.Model.BackEnd.CodeFirst
 {
+    [Table("BOOK_DATA")]
     /// <summary>
     /// BookData to BookClass 一對多的部分，利用BOOK_CLASS_ID
     /// 我們將從使用下列「一般舊 CLR 物件」 (POC) 開始， EF 提供數個 POCO 範本。
     /// </summary>
     public class BookData
     {
-        public BookData()
+        /*public BookData()
         {
             this.BookClass = new HashSet<BookClass>();
-        }
+        }*/
 
         /// <summary>
         /// 類別代號
@@ -47,7 +49,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 書籍購書日期
         /// </summary>
         [DisplayName("書籍購書日期")]
-        public string BOOK_BOUGHT_DATE { get; set; }
+        public DateTime BOOK_BOUGHT_DATE { get; set; }
 
         /// <summary>
         /// 出版商
@@ -83,7 +85,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 建立時間
         /// </summary>
         [DisplayName("建立時間")]
-        public string CREATE_DATE { get; set; }
+        public DateTime CREATE_DATE { get; set; }
 
         /// <summary>
         /// 建立使用者
@@ -95,7 +97,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 修改時間
         /// </summary>
         [DisplayName("修改時間")]
-        public string MODIFY_DATE { get; set; }
+        public DateTime MODIFY_DATE { get; set; }
 
         /// <summary>
         /// 修改使用者
@@ -105,7 +107,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// <summary>
         /// 跟Hset有關
         /// </summary>
-        public virtual ICollection<BookClass> BookClass { get; set; }
+        /*public virtual ICollection<BookClass> BookClass { get; set; }*/
         //public virtual List<BookClass> BookClass { get; set; }
     }
 }

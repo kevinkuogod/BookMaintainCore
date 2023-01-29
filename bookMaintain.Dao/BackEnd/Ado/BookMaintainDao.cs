@@ -133,13 +133,13 @@ namespace bookMaintain.Dao.BackEnd.Ado
 
                 bookData = bookData + " Order By [BOOK_BOUGHT_DATE] DESC;";
                 cmd = new SqlCommand(bookData, conn);
-                foreach (var element in list)
+                /*foreach (var element in list)
                 {
                     if (bookData.IndexOf(element.Key) != -1)
                     {
                         cmd.Parameters.Add(new SqlParameter(element.Key, element.Value));
                     }
-                }
+                }*/
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
 
                 sqlAdapter.Fill(bookDs, "bookTable");
@@ -443,6 +443,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
                         USER_ENAME = string.IsNullOrEmpty(row["USER_ENAME"].ToString()) ? "*此書無作者*" : row["USER_ENAME"].ToString(),
                     }
                 );
+                //result[0].BOOK_ID
             }
             return result;
         }

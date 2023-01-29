@@ -191,8 +191,32 @@
     <!-- windows用蓋的，有資料就重蓋 -->
     <div class="row">
         <div class="col-12">
+            <!--
             <div id="searchTable">
             </div>
+            -->
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Extn.</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Office</th>
+                        <th>Extn.</th>
+                        <th>Start date</th>
+                        <th>Salary</th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
     </div>
 
@@ -357,7 +381,7 @@
                     },
                     liKey: "indexFromButton"
                 },
-                {
+                /*{
                     key: "searchTable",
                     objectName: "table",
                     pageable: {
@@ -377,8 +401,62 @@
                         { command: { text: "編輯", click: updateBookMaintain }, title: "編輯", width: "140px" },
                         { command: { text: "刪除", click: deleteBook }, title: "刪除", width: "140px" },
                     ]
-                }
+                }*/
             ];
+
+            //https://datatables.net/examples/styling/bootstrap5.html
+            $(document).ready(function () {
+                 var table = $('#example').DataTable({
+                    processing: true,
+                    //serverSide: true,
+                    destroy: true,
+                    ajax: {
+                        url: '/BookMaintain/getTableMainData',
+                        type: 'POST',
+                        /*data: {
+                           formName: 'afscpMcn',
+                           action: 'search'
+                        },*/
+                    },
+                    columns: [
+                        { data: 'booK_ID' },
+                        { data: 'booK_CLASS_ID' },
+                        { data: 'booK_NAME' },
+                        { data: 'booK_AMOUNT' },
+                        { data: 'identitY_FILED' },
+                        { data: 'useR_ENAME' },
+                    ],
+                    pages: 5, // number of pages to cache
+                });
+
+                $('#example').on( 'page.dt', function () {
+                    var info = table.page.info();
+                    alert('Showing page: '+info.page+' of '+info.pages);
+                    table = $('#example').DataTable({
+                    processing: true,
+                    destroy: true,
+                    //serverSide: true,
+                    ajax: {
+                        url: '/BookMaintain/getTableMainData',
+                        type: 'POST',
+                        /*data: {
+                           formName: 'afscpMcn',
+                           action: 'search'
+                        },*/
+                    },
+                    columns: [
+                        { data: 'booK_ID' },
+                        { data: 'booK_CLASS_ID' },
+                        { data: 'booK_NAME' },
+                        { data: 'booK_AMOUNT' },
+                        { data: 'identitY_FILED' },
+                        { data: 'useR_ENAME' },
+                    ],
+                    pages: 5, // number of pages to cache
+                });
+                } );
+            });
+
             //相關的資料可以丟localStorage，避免重複抓取
             createObjet(indexFromObjet, "indexForm");
             processObjet(indexFromObjet);
@@ -443,7 +521,7 @@
                 data['pageSize'] = 10;
 
                 //template 應該要掛上去最後在刪掉
-                getDataSource("/BookMaintain/getTableMainData", "searchTable", data, {
+                /*getDataSource("/BookMaintain/getTableMainData", "searchTable", data, {
                     key: "searchTable",
                     objectName: "table",
                     pageable: {
@@ -463,7 +541,7 @@
                         { command: { text: "編輯", click: updateBookMaintain }, title: "編輯", width: "140px", class: "btn btn-secondary" },
                         { command: { text: "刪除", click: deleteBook }, title: "刪除", width: "140px", class: "btn btn-secondary" },
                     ]
-                });
+                });*/
             });
 
         }

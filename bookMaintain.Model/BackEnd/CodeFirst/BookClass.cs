@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace bookMaintain.Model.BackEnd.CodeFirst
 {
+    [Table("BOOK_CLASS")]
     /// <summary>
     /// BookData to BookClass一對多的部分
     /// </summary>

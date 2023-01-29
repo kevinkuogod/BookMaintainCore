@@ -1,7 +1,11 @@
-﻿using bookMaintain.Dao.BackEnd.Ado;
+﻿//using bookMaintain.Dao.BackEnd.Ado;
+using bookMaintain.Dao.BackEnd.Context;
 using bookMaintain.Model.BackEnd.Arg.BookMaintain;
 
 using bookMaintain.Model.BackEnd.Arg.Input;
+
+
+using bookMaintain.Model.BackEnd.CodeFirst;
 
 namespace bookMaintain.Service
 {
@@ -30,12 +34,16 @@ namespace bookMaintain.Service
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
+        /*public List<Book> GetTable(SearchArg arg)
+        {
+            return bookMaintainDao.GetTable(arg);
+        }*/
         public List<Book> GetTable(SearchArg arg)
         {
             return bookMaintainDao.GetTable(arg);
         }
 
-        public int InsertBookMaintain(InsertArg bookMaintain)
+        /*public int InsertBookMaintain(InsertArg bookMaintain)
         {
             return bookMaintainDao.InsertBookMaintain(bookMaintain);
         }
@@ -68,6 +76,6 @@ namespace bookMaintain.Service
         public int GetNetBookNumber()
         {
             return bookMaintainDao.GetNetBookNumber();
-        }
+        }*/
     }
 }

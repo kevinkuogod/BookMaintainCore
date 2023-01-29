@@ -10,6 +10,7 @@ using System.Collections;
 using bookMaintain.Common;
 using System.Data.Entity.Core.Objects;
 using System.Data.SqlTypes;
+using Microsoft.SqlServer.Server;
 
 namespace bookMaintain.Dao.Ado
 {
@@ -133,8 +134,16 @@ namespace bookMaintain.Dao.Ado
             /// <returns></returns>
             //
             public int InsertVocabulary(InsertArg insertArg)
-        {
-            
+            {
+
+            FileInfo fi = new FileInfo(insertArg.English_File.FileName);
+            string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                //await insertArg.English_File.CopyToAsync(fileStream);
+                insertArg.English_File.CopyTo(fileStream);
+            }
+
             string vocabularyChancesSql = @"SELECT 
                                       Chances,
                                       Example_Sentences,
