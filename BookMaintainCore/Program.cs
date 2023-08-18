@@ -27,13 +27,16 @@ builder.Services.AddCors(options =>
     {
         //policy.WithOrigins("http://localhost:4200", "http://localhost:8100") 不可用
         //policy.WithOrigins("http://localhost:8100")
-        policy.WithOrigins("http://192.168.2.25:8100", "http://localhost:8100", "https://kevinkuotesttwo.ddns.net")
+        //policy.WithOrigins("http://192.168.2.25:8100", "http://localhost:8100", "https://kevinkuotesttwo.ddns.net")
         //policy.WithOrigins("http://192.168.2.25:8100", "https://kevinkuotesttwo.ddns.net")
         //policy.WithOrigins("https://kevinkuotest.ddns.net")
         //policy.WithOrigins("https://localhost")
-              .AllowAnyHeader()
+        /*policy.AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials();*/
+        policy.AllowAnyOrigin()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyHeader();
     });
 });
 builder.Services.AddMvc();
@@ -105,8 +108,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-//app.UseCors(MyAllowSpecificOrigins);//跨域
-app.UseCors();
+app.UseCors(MyAllowSpecificOrigins);//跨域
+//app.UseCors();
 
 app.UseAuthorization();//授權
 app.UseAuthentication();//驗證
