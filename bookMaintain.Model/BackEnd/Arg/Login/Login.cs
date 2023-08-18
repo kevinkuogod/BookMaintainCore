@@ -16,10 +16,10 @@ namespace bookMaintain.Model.BackEnd.Arg.BookMaintain
         [DisplayName("密碼")]
         public string? Password { get; set; }
 
-        /// <summary>
+        ///<summary>
         /// 機器種類
         /// </summary>
-        /*[DisplayName("機器種類")]
-        public string? MachineType { get; set; }*/
+        [DisplayName("機器種類")]
+        public string? MachineType { get; set; }
     }
 }
