@@ -13,8 +13,23 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7237;http://localhost:5237",
+      //"applicationUrl": "http://localhost:5237",
+      //"applicationUrl": "https://localhost:7237;",
+      //"applicationUrl": "http://114.44.126.185:2546",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "BookMaintainCoreProduction": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      //"applicationUrl": "http://114.44.126.185:8101",
+      //"applicationUrl": "http://localhost:5237",
+      //"applicationUrl": "https://localhost:7237;",
+      "applicationUrl": "https://localhost:7237;http://localhost:5237",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "IIS Express": {

@@ -4,7 +4,9 @@ namespace bookMaintain.Dao.BackEnd.Ado
 {
     public interface ILoginDao
     {
-        int Insert(Login insertArg);
+        dynamic Insert(Login insertArg);
+
+        dynamic InsertMysql(Login insertArg);
 
         int ForgetPassword(Login forgetPasswordArg);
     }

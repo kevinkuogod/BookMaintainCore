@@ -13,7 +13,7 @@ namespace bookMaintain.Dao.BackEnd.Context
 {
     public interface IBookMaintainDao
     {
-        List<Book> GetTable(SearchArg arg);
+        List<ChatroomContent> GetTable(SearchArg arg);
         List<BookData> GetTable1(SearchArg arg);
         List<BookData> GetTable2(SearchArg arg);
     }

@@ -9,7 +9,7 @@ namespace bookMaintain.Model.BackEnd.Arg.Input
         /// input種類
         /// </summary>
         [DisplayName("input種類")]
-        public string type { get; set; }
+        public string? type { get; set; }
     }
     /*
     public class InsertGroupA

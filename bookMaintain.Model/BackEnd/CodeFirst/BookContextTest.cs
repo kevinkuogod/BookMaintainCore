@@ -6,6 +6,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
     // BookContext.Categories為一個DbSet，可以用函式調用貌似list的概念
     public class BookContextTest : DbContext
     {
+        #pragma warning disable CS8618
         public BookContextTest() : base("name=DBConn")
         {
             this.Configuration.ProxyCreationEnabled = false;

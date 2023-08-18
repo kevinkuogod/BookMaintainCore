@@ -10,6 +10,7 @@ namespace bookMaintain.Model.BackEnd.EFCore
     /// </summary>
     public class BookData
     {
+        #pragma warning disable CS8618
         public BookData()
         {
             this.BookClass = new HashSet<BookClass>();

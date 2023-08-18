@@ -15,42 +15,42 @@ namespace bookMaintain.Model.BackEnd.Arg.BookLendRecord
         /// 書籍ID
         /// </summary>
         [DisplayName("書籍ID")]
-        public string BOOK_ID { get; set; }
+        public string? BOOK_ID { get; set; }
 
         /// <summary>
         /// 借書者
         /// </summary>
         [DisplayName("借書者")]
-        public string KEEPER_ID { get; set; }
+        public string? KEEPER_ID { get; set; }
 
         /// <summary>
         /// 借書時間
         /// </summary>
         [DisplayName("借書時間")]
-        public string LEND_DATE { get; set; }
+        public string? LEND_DATE { get; set; }
 
         /// <summary>
         /// 建立時間
         /// </summary>
         [DisplayName("建立時間")]
-        public string CRE_DATE { get; set; }
+        public string? CRE_DATE { get; set; }
 
         /// <summary>
         /// 建立使用者
         /// </summary>
         [DisplayName("建立使用者")]
-        public string CRE_USR { get; set; }
+        public string? CRE_USR { get; set; }
 
         /// <summary>
         /// 修改時間
         /// </summary>
         [DisplayName("修改時間")]
-        public string MOD_DATE { get; set; }
+        public string? MOD_DATE { get; set; }
 
         /// <summary>
         /// 修改使用者
         /// </summary>
         [DisplayName("修改使用者")]
-        public string MOD_USR { get; set; }
+        public string? MOD_USR { get; set; }
     }
 }

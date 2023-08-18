@@ -16,7 +16,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// <returns></returns>
         private string GetDBConnectionString()
         {
-            return bookMaintain.Common.ConfigTool.GetDBConnectionString();
+            return bookMaintain.Common.ConfigTool.GetDBConnectionString("ConnectionStrings:Default");
         }
 
         /// <summary>

@@ -6,6 +6,7 @@ namespace BookMaintainCore
     {
         public static WebApplication InitalizeApp(string[] args)
         {
+            //.net5 時會用到
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(options =>
@@ -23,7 +24,7 @@ namespace BookMaintainCore
                 options.LoginPath = "/Login/Index"; //驗證登入
                 options.LogoutPath = "/Login/Index"; //驗證登出
                 //↓資安建議false，白箱弱掃軟體會要求cookie不能延展效期，這時設false變成絕對逾期時間
-                //↓如果你的客戶反應明明一直在使用系統卻容易被自動登出的話，你再設為true(然後弱掃policy請客戶略過此項檢查) 
+                //↓如果你的客戶反應明明一直在使用系統卻容易被自動登出的話，你再設為true(然後弱掃policy請客戶略過此項檢查)
                 options.SlidingExpiration = false;
 
                 options.ReturnUrlParameter = "returnUrl";

@@ -8,12 +8,18 @@ namespace bookMaintain.Model.BackEnd.Arg.BookMaintain
         /// 信箱
         /// </summary>
         [DisplayName("信箱")]
-        public string EMAIL { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// 密碼
         /// </summary>
         [DisplayName("密碼")]
-        public string PASSWORD { get; set; }
+        public string? Password { get; set; }
+
+        /// <summary>
+        /// 機器種類
+        /// </summary>
+        /*[DisplayName("機器種類")]
+        public string? MachineType { get; set; }*/
     }
 }

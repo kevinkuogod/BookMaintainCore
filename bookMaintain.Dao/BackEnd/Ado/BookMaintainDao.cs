@@ -18,7 +18,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// <returns></returns>
         private string GetDBConnectionString()
         {
-            return bookMaintain.Common.ConfigTool.GetDBConnectionString();
+            return bookMaintain.Common.ConfigTool.GetDBConnectionString("ConnectionStrings:Default");
         }
 
         public int GetNetBookNumber()
@@ -30,7 +30,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// 取得GetBookDataByCondtioin的全部資料
         /// </summary>
         /// <returns></returns>
-        public List<Book> GetTable(SearchArg arg)
+        public List<ChatroomContent> GetTable(SearchArg arg)
         {
             //leftJon版，對照組，叡揚問的leftjoin版
             DataSet bookDs = new DataSet();
@@ -101,7 +101,6 @@ namespace bookMaintain.Dao.BackEnd.Ado
             list.Add(new KeyValuePair<string, string>("@CODE_ID", arg.CODE_ID));
             list.Add(new KeyValuePair<string, string>("@BOOK_NAME", arg.BOOK_NAME));
             list.Add(new KeyValuePair<string, string>("@USER_ID", arg.USER_ID));
-
             SqlConnection conn      = new SqlConnection(this.GetDBConnectionString());
             bool BOOK_CLASS_ID_BOOL = arg.BOOK_CLASS_ID != null;
             bool CODE_ID_BOOL       = arg.CODE_ID != null;
@@ -132,6 +131,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 }
 
                 bookData = bookData + " Order By [BOOK_BOUGHT_DATE] DESC;";
+ 
                 cmd = new SqlCommand(bookData, conn);
                 /*foreach (var element in list)
                 {
@@ -140,9 +140,11 @@ namespace bookMaintain.Dao.BackEnd.Ado
                         cmd.Parameters.Add(new SqlParameter(element.Key, element.Value));
                     }
                 }*/
+                Console.WriteLine(cmd.CommandText.ToString());
                 SqlDataAdapter sqlAdapter = new SqlDataAdapter(cmd);
-
+                Console.WriteLine("123123");
                 sqlAdapter.Fill(bookDs, "bookTable");
+                Console.WriteLine("456456");
                 //sqlAdapter.Fill(bookDt);
                 conn.Close();
             }
@@ -152,7 +154,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
             
             DataTable tables = bookDs.Tables["bookTable"];
             var bookDtListPre = (from item in tables.AsEnumerable() select item).ToList();//執行LINQ語句,這裡的.AsEnumerable()是延遲發生,不會立即執行，實際上什麼都沒有發生
-            List<Book> bookDtList = this.bookDtToListArray(bookDtListPre);
+            List<ChatroomContent> bookDtList = this.bookDtToListArray(bookDtListPre);
             
             //釋放資源
             //bookDt.Clear();
@@ -387,13 +389,13 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        private List<Book> bookDtToListArray(List<DataRow> bookDtListPre)
+        private List<ChatroomContent> bookDtToListArray(List<DataRow> bookDtListPre)
         {
-            List<Book> result = new List<Book>();
+            List<ChatroomContent> result = new List<ChatroomContent>();
             foreach (var res in bookDtListPre)
             {
                 result.Add(
-                    new Book()
+                    new ChatroomContent()
                     {
                         BOOK_ID = (int)res["BOOK_ID"],
                         BOOK_NAME = string.IsNullOrEmpty(res["BOOK_NAME"].ToString()) ? "*此書無書名*" : res["BOOK_NAME"].ToString(),
@@ -420,13 +422,13 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// </summary>
         /// <param name="dt"></param>
         /// <returns></returns>
-        private List<Book> bookDtToList(DataTable dt)
+        private List<ChatroomContent> bookDtToList(DataTable dt)
         {
-            List<Book> result = new List<Book>();
+            List<ChatroomContent> result = new List<ChatroomContent>();
             foreach (DataRow row in dt.Rows)
             {
                 result.Add(
-                    new Book()
+                    new ChatroomContent()
                     {
                         BOOK_ID = (int)row["BOOK_ID"],
                         BOOK_NAME = string.IsNullOrEmpty(row["BOOK_NAME"].ToString()) ? "*此書無書名*" : row["BOOK_NAME"].ToString(),

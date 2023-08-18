@@ -6,6 +6,8 @@ using bookMaintain.Model.BackEnd.Arg.BookMaintain;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.IO;
+using System.Text;
+using System.Security.Cryptography.Xml;
 
 namespace bookMaintain.Dao.BackEnd.Ado
 {
@@ -17,7 +19,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
         /// <returns></returns>
         private string GetDBConnectionString()
         {
-            return bookMaintain.Common.ConfigTool.GetDBConnectionString();
+            return bookMaintain.Common.ConfigTool.GetDBConnectionString("ConnectionStrings:Default");
         }
 
         /// <summary>
@@ -75,7 +77,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
                              '2',@EMAIL, @EMAIL_VERIFIED_AT,
                             @TELEPHONE,@FAX, @PASSWORD,@Salt
                             , @CREATE_DATE, 'admin', @MODIFY_DATE, 'admin'
-                            ,'159'
+                            ,'159',@PublicKey,@PrivateKey
         				)
                         SELECT SCOPE_IDENTITY()";
 
@@ -88,21 +90,22 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 SqlCommand cmd = new SqlCommand(sql, conn);
 
                 //加密密碼
-            /*
-                byte[] buffer;
-                DESCryptoServiceProvider DesCSP = new DESCryptoServiceProvider();
-                MemoryStream ms = new MemoryStream();//先建立 一個記憶體流
-                CryptoStream cryStream = new CryptoStream(ms, DesCSP.CreateEncryptor(), CryptoStreamMode.Write);//將記憶體流連線到加密轉換流
-                StreamWriter sw = new StreamWriter(cryStream);
-                sw.WriteLine(insertArg.PASSWORD);//將要加密的字串寫入加密轉換流
-                sw.Close();
-                cryStream.Close();
-                buffer = ms.ToArray();//將加密後的流轉換為位元組陣列
-                insertArg.PASSWORD = Convert.ToBase64String(buffer);//將加密後的位元組陣列轉換為字串
-            */
+                /*
+                    byte[] buffer;
+                    DESCryptoServiceProvider DesCSP = new DESCryptoServiceProvider();
+                    MemoryStream ms = new MemoryStream();//先建立 一個記憶體流
+                    CryptoStream cryStream = new CryptoStream(ms, DesCSP.CreateEncryptor(), CryptoStreamMode.Write);//將記憶體流連線到加密轉換流
+                    StreamWriter sw = new StreamWriter(cryStream);
+                    sw.WriteLine(insertArg.PASSWORD);//將要加密的字串寫入加密轉換流
+                    sw.Close();
+                    cryStream.Close();
+                    buffer = ms.ToArray();//將加密後的流轉換為位元組陣列
+                    insertArg.PASSWORD = Convert.ToBase64String(buffer);//將加密後的位元組陣列轉換為字串
+                */
 
 
                 string salt = bookMaintain.Common.CreateRandom.createRandomString();
+                /*IIS 無法使用所以改方法
                 string KeyContainerName = null;
                 System.Security.Cryptography.CspParameters param = new System.Security.Cryptography.CspParameters();
                 param.KeyContainerName = KeyContainerName ?? salt; //密匙容器的名称，保持加密解密一致才能解密成功
@@ -111,7 +114,18 @@ namespace bookMaintain.Dao.BackEnd.Ado
                     byte[] plaindata = System.Text.Encoding.Default.GetBytes(insertArg.PASSWORD);//将要加密的字符串转换为字节数组
                     byte[] encryptdata = rsa.Encrypt(plaindata, false);//将加密后的字节数据转换为新的加密字节数组
                     insertArg.PASSWORD = Convert.ToBase64String(encryptdata);//将加密后的字节数组转换为字符串
-                }
+                }*/
+
+                /*RSAEncryptionPadding padding;
+                using (RSA rsa = RSA.Create())
+                {
+                    padding = RSAEncryptionPadding.OaepSHA256;
+                    byte[] encryptedData = rsa.Encrypt(Encoding.UTF8.GetBytes(insertArg.PASSWORD), padding);
+                    insertArg.PASSWORD = Convert.ToBase64String(encryptedData);//将加密后的字节数组转换为字符串
+                }*/
+
+                Tuple<string, string> ksys = bookMaintain.Common.RSA.GenerateRSAKeys();
+                insertArg.PASSWORD = bookMaintain.Common.RSA.Encrypt(ksys.Item1, insertArg.PASSWORD, salt);
 
                 try
                 {
@@ -125,6 +139,8 @@ namespace bookMaintain.Dao.BackEnd.Ado
                     cmd.Parameters.Add(new SqlParameter("@FAX", insertArg.FAX));
                     cmd.Parameters.Add(new SqlParameter("@Salt", salt));
                     cmd.Parameters.Add(new SqlParameter("@PASSWORD", insertArg.PASSWORD));
+                    cmd.Parameters.Add(new SqlParameter("@PublicKey", ksys.Item1));
+                    cmd.Parameters.Add(new SqlParameter("@PrivateKey", ksys.Item2));
                     cmd.Parameters.Add(new SqlParameter("@CREATE_DATE", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")));
                     cmd.Parameters.Add(new SqlParameter("@MODIFY_DATE", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")));
                     RegisterId = Convert.ToInt32(cmd.ExecuteScalar());

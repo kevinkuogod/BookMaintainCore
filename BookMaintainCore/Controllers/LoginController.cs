@@ -14,6 +14,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using static System.Net.Mime.MediaTypeNames;
 using bookMaintain.Dao.BackEnd.Ado;
+using Microsoft.AspNetCore.Cors;
+using Newtonsoft.Json.Linq;
+using Azure.Core;
+using System.Reflection.Metadata;
 
 namespace BookMaintain.Controllers
 {
@@ -68,7 +72,6 @@ namespace BookMaintain.Controllers
         /// 註冊(實作)
         /// </summary>
         /// <returns></returns>
-        [HttpPost]
         //,string ReturnUrl
         /*
          * if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl) )
@@ -85,25 +88,27 @@ Login login = new Login()
     EMAIL = loginData.Email.Value,
     PASSWORD = loginData.Password.Value
 };*/
+        [HttpPost]
+        //[EnableCors("MyPolicy")]
+        [DisableCors]
+        //public JsonResult Insert(Login loginJson)
         public JsonResult Insert(Login loginJson)
         {
             try
             {
-                Login login = new Login()
-                {
-                    EMAIL = loginJson.EMAIL,
-                    PASSWORD = loginJson.PASSWORD
-                };
+                Logger.Write(Logger.LogCategoryEnum.Error, "13");
+                Logger.Write(Logger.LogCategoryEnum.Error, loginJson.Email);
+                Logger.Write(Logger.LogCategoryEnum.Error, "33");
 
                 if (ModelState.IsValid)
                 {
-                    int determineLogin = loginService.Insert(login);
-                    if (determineLogin == 1)
+                    var loginObject = loginService.Insert(loginJson);
+                    if (loginObject.loginStatus == 1)
                     {
                         //Session["auth"] = true;
                         var claims = new List<Claim>() {
                             new Claim(ClaimTypes.NameIdentifier,"test"),
-                            new Claim(ClaimTypes.Name,login.EMAIL.ToString()),
+                            new Claim(ClaimTypes.Name,loginJson.Email.ToString()),
                             new Claim(ClaimTypes.Role, "Administrator")
                         };
                         //Initialize a new instance of the ClaimsIdentity with the claims and authentication scheme    
@@ -143,7 +148,7 @@ Login login = new Login()
                         HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                                         new ClaimsPrincipal(claimsIdentity),
                                                         authProperties);
-                        return this.Json(new { type = "login", message = "登入成功" });
+                        return this.Json(new { type = "login", message = "登入成功", loginName = loginObject.loginName });
                  
                     }
                     else
@@ -159,11 +164,24 @@ Login login = new Login()
             }
             catch (Exception parameterEx)
             {
-                Logger.Write(Logger.LogCategoryEnum.Error, parameterEx.ToString());
+                return new JsonHttpStatusResult(
+                           new { type = "login", message = parameterEx.ToString(), code = (int)ErrorCode.ErrorCodeField.insertBookError }
+                            , HttpStatusCode.InternalServerError);
+                /*Logger.Write(Logger.LogCategoryEnum.Error, parameterEx.ToString());
                 return new JsonHttpStatusResult(
                            new { type = "login", message = "登入過程錯誤", code = (int)ErrorCode.ErrorCodeField.insertBookError }
-                            , HttpStatusCode.InternalServerError);
+                            , HttpStatusCode.InternalServerError);*/
             }
+        }
+
+        /// <summary>
+        /// 來源 IP
+        /// </summary>
+        /// <returns></returns>
+        public string GetClientIP()
+        {
+            var remoteIpAddress = Request.HttpContext.Connection.RemoteIpAddress;
+            return remoteIpAddress.ToString();
         }
 
         /// <summary>
@@ -198,8 +216,8 @@ Login login = new Login()
 
                 Login login = new Login()
                 {
-                    EMAIL = forgetPasswordData.Email.Value,
-                    PASSWORD = forgetPasswordData.Password.Value
+                    Email = forgetPasswordData.Email.Value,
+                    Password = forgetPasswordData.Password.Value
                 };
 
                 if (ModelState.IsValid)

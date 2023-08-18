@@ -8,6 +8,6 @@ namespace bookMaintain.Model.BackEnd.Arg.Input
         /// 下拉式選單文字部分
         /// </summary>
         [DisplayName("下拉式選單文字部分")]
-        public string Text { get; set; }
+        public string? Text { get; set; }
     }
 }

@@ -5,13 +5,13 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookMaintainCore", "BookMaintainCore\BookMaintainCore.csproj", "{0DB48C32-525C-4546-B85D-CE31018AC7A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookMaintain.Model", "bookMaintain.Model\bookMaintain.Model.csproj", "{F4FC4204-5A70-47F8-8754-5227BE6C2C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bookMaintain.Model", "bookMaintain.Model\bookMaintain.Model.csproj", "{F4FC4204-5A70-47F8-8754-5227BE6C2C05}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookMaintain.Common", "bookMaintain.Common\bookMaintain.Common.csproj", "{7850490C-693C-429A-9E19-5B5CDB5A0D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bookMaintain.Common", "bookMaintain.Common\bookMaintain.Common.csproj", "{7850490C-693C-429A-9E19-5B5CDB5A0D53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookMaintain.Dao", "bookMaintain.Dao\bookMaintain.Dao.csproj", "{C1B7B40D-9CF9-4496-9B33-53DC240CE0FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bookMaintain.Dao", "bookMaintain.Dao\bookMaintain.Dao.csproj", "{C1B7B40D-9CF9-4496-9B33-53DC240CE0FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bookMaintain.Service", "bookMaintain.Service\bookMaintain.Service.csproj", "{7616A564-6B1C-4D12-BA83-4A1BF2531DF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bookMaintain.Service", "bookMaintain.Service\bookMaintain.Service.csproj", "{7616A564-6B1C-4D12-BA83-4A1BF2531DF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

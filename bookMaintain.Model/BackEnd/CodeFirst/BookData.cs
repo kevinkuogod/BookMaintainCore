@@ -31,19 +31,19 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         ///[InverseProperty(nameof(Like.Post))]
         ///[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [DisplayName("書籍名稱")]
-        public string BOOK_NAME { get; set; }
+        public string? BOOK_NAME { get; set; }
 
         /// <summary>
         /// 類別代號BOOK_CLASS.BOOK_CLASS_ID
         /// </summary>
         [DisplayName("類別代號BOOK_CLASS.BOOK_CLASS_ID")]
-        public string BOOK_CLASS_ID { get; set; }
+        public string? BOOK_CLASS_ID { get; set; }
 
         /// <summary>
         /// 書籍作者
         /// </summary>
         [DisplayName("書籍作者")]
-        public string BOOK_AUTHOR { get; set; }
+        public string? BOOK_AUTHOR { get; set; }
 
         /// <summary>
         /// 書籍購書日期
@@ -55,25 +55,25 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 出版商
         /// </summary>
         [DisplayName("出版商")]
-        public string BOOK_PUBLISHER { get; set; }
+        public string? BOOK_PUBLISHER { get; set; }
 
         /// <summary>
         /// 內容簡介
         /// </summary>
         [DisplayName("內容簡介")]
-        public string BOOK_NOTE { get; set; }
+        public string? BOOK_NOTE { get; set; }
 
         /// <summary>
         /// 狀態BOOK_CODE.CODE_ID (A可以借出 B以借出 U不可借出)
         /// </summary>
         [DisplayName("狀態(A可以借出 B以借出 U不可借出)")]
-        public string BOOK_STATUS { get; set; }
+        public string? BOOK_STATUS { get; set; }
 
         /// <summary>
         /// 書籍保管人
         /// </summary>
         [DisplayName("書籍保管人")]
-        public string BOOK_KEEPER { get; set; }
+        public string? BOOK_KEEPER { get; set; }
 
         /// <summary>
         /// 書籍購買金額
@@ -91,7 +91,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 建立使用者
         /// </summary>
         [DisplayName("建立使用者")]
-        public string CREATE_USER { get; set; }
+        public string? CREATE_USER { get; set; }
 
         /// <summary>
         /// 修改時間
@@ -103,7 +103,7 @@ namespace bookMaintain.Model.BackEnd.CodeFirst
         /// 修改使用者
         /// </summary>
         [DisplayName("修改使用者")]
-        public string MODIFY_USER { get; set; }
+        public string? MODIFY_USER { get; set; }
         /// <summary>
         /// 跟Hset有關
         /// </summary>

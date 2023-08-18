@@ -8,13 +8,14 @@ namespace bookMaintain.Common.BackEnd
     {
         /// <summary>Provides information about the action method that is marked by the <see cref="T:System.Web.Mvc.AuthorizeAttribute" /> attribute, such as its name, controller, parameters, attributes, and filters.</summary>
         /// <returns>The action descriptor for the action method that is marked by the <see cref="T:System.Web.Mvc.AuthorizeAttribute" /> attribute.</returns>
-        public virtual ActionDescriptor ActionDescriptor { get; set; }
+        public new virtual ActionDescriptor ActionDescriptor { get; set; }
 
         /// <summary>Gets or sets the result that is returned by an action method.</summary>
         /// <returns>The result that is returned by an action method.</returns>
         public ActionResult Result { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="T:System.Web.Mvc.AuthorizationContext" /> class.</summary>
+        #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor.
         public AuthorizationContext()
         {
         }

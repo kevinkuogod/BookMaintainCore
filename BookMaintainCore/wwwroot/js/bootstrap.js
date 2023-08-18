@@ -964,6 +964,7 @@ function validation(validationObj) {
             }
         }
     });
+    //systemData.data.append('MachineType', 'PhoneLoginState');
 }
 
 function getObjUrl(file) {
@@ -1021,7 +1022,7 @@ function implementAjax(link, jsonTitle) {
                 console.log(successData);
                 switch (successData.type) {
                     case type_insert:
-                        ajaxBSError(successData);
+                        /*ajaxBSError(successData);
                         clearFromData([
                             $("#insertBookName")[0],
                             $("#insertAuthor")[0],
@@ -1029,34 +1030,34 @@ function implementAjax(link, jsonTitle) {
                             $("#insertBookNote")[0],
                             $("#insertCodeId")[0],
                             $("#insertBookBoughtDate")[0],
-                            $("#insertBookClassId")[0]]);
+                            $("#insertBookClassId")[0]]);*/
                         break;
                     case type_update:
-                        ajaxBSError(successData);
+                        //ajaxBSError(successData);
                         break;
                     case type_destory:
-                        if (successData.code == 0) {
+                        /*if (successData.code == 0) {
                             removeTableData();
-                        }
-                        ajaxBSError(successData);
+                        }*/
+                        //ajaxBSError(successData);
                         break;
                     case type_detail:
-                        ajaxBSError(successData);
+                        //ajaxBSError(successData);
                         break;
                     case type_login:
-                        ajaxBSError(successData);
+                        //ajaxBSError(successData);
                         //console.log($.cookie('ASPNetCroe.Cookies'));
                         break;
                     case type_error:
-                        ajaxBSError(successData);
+                        //ajaxBSError(successData);
                         break;
                 }
             } else {
-                ajaxBSError(successData);
+                //ajaxBSError(successData);
             }
         },
         error: function (error) {
-            ajaxBSError(error);
+            console.log(error);
         }
     });
 }

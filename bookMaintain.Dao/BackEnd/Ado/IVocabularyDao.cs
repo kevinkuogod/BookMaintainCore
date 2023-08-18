@@ -5,6 +5,6 @@ namespace bookMaintain.Dao.Ado
     public interface IVocabularyDao
     {
         int GetNetBookNumber();
-        int InsertVocabulary(InsertArg insertArg);
+        Task<int> InsertVocabulary(InsertArg insertArg);
     }
 }

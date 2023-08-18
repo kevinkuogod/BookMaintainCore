@@ -34,6 +34,6 @@ namespace bookMaintain.Model.BackEnd.Arg.BookMaintain
         /// 分頁大小
         /// </summary>
         [DisplayName("分頁大小")]
-        public string? pageSize { get; set; }
+        public int pageSize { get; set; }
     }
 }

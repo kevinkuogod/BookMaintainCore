@@ -4,6 +4,6 @@ namespace bookMaintain.Service
 {
     public interface IVocabularyService
     {
-        int InsertVocabulary(InsertArg insertArg);
+        Task<int> InsertVocabulary(InsertArg insertArg);
     }
 }

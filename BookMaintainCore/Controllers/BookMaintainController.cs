@@ -41,13 +41,23 @@ namespace BookMaintain.Controllers
         //[Authorize(Policy = ".AspNetCore.Cookies")]
         //[Route("api/value/{id:int}")]
         //[AuthorizePlusAttribute]
-        public ActionResult Index()
+        //ContentResult
+        //FileResult
+        public ViewResult Index()
         {
+            //PartialViewResult 指定或預設的view樣板
+            //return RedirectToAction("Redirected");
+            //return Redirect("http://www.google.com");
+            //var msg = "alert('Are you sure want to Continue?');";
+            //return new JavaScriptResult() { Script = msg };
+
             //HttpContext.Current.Request.QueryString("456");
             //var userInfo = new UserInfo(User.Claims.ToList()); //只有用了Authorize才能使用
             //userInfo.Name
             try
             {
+                //return File(path, "application/x-zip-compressed");
+                //return File("g:\\鹤冲天.zip", "application/x-zip-compressed", "crane.zip");
                 return View();
             }
             catch (Exception parameterEx)
@@ -119,7 +129,7 @@ namespace BookMaintain.Controllers
                     default:
                         break;
                 }
-                return this.Json(new { data = number, message = "success" }); ;
+                return this.Json(new { data = number, message = "success" });
             }
             catch (Exception parameterEx)
             {

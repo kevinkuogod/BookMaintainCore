@@ -23,9 +23,9 @@ namespace bookMaintain.Service
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        public int InsertVocabulary(InsertArg insertArg)
+        public async Task<int> InsertVocabulary(InsertArg insertArg)
         {
-            return vocabularyDao.InsertVocabulary(insertArg);
+            return await vocabularyDao.InsertVocabulary(insertArg);
         }
     }
 }

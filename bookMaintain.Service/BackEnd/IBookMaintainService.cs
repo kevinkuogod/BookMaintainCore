@@ -9,7 +9,7 @@ namespace bookMaintain.Service
     public interface IBookMaintainService
     {
         //List<Book> GetTable(SearchArg arg);
-        List<Book> GetTable(SearchArg arg);
+        List<ChatroomContent> GetTable(SearchArg arg);
         
         /*List<InputListValue> GetInputTableBootstarp(string tableName, string type);
         int InsertBookMaintain(InsertArg bookMaintain);

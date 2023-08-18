@@ -30,43 +30,43 @@ namespace bookMaintain.Model.BackEnd.Arg.BookMaintain
         /// 顧客'姓'後名稱
         /// </summary>
         [DisplayName("顧客姓後名稱")]
-        public string FIRST_NAME { get; set; }
+        public string? FIRST_NAME { get; set; }
 
         /// <summary>
         /// 顧客'姓'名稱
         /// </summary>
         [DisplayName("顧客姓名稱")]
-        public string LAST_NAME { get; set; }
+        public string? LAST_NAME { get; set; }
 
         /// <summary>
         /// 角色
         /// </summary>
         [DisplayName("角色")]
-        public string ROLE { get; set; }
+        public string? ROLE { get; set; }
 
         /// <summary>
         /// 信箱
         /// </summary>
         [DisplayName("信箱")]
-        public string EMAIL { get; set; }
+        public string? EMAIL { get; set; }
 
         /// <summary>
         /// 信箱驗證時間
         /// </summary>
         [DisplayName("信箱驗證時間")]
-        public string EMAIL_VERIFIED_AT { get; set; }
+        public string? EMAIL_VERIFIED_AT { get; set; }
 
         /// <summary>
         /// 電話名稱
         /// </summary>
         [DisplayName("電話名稱")]
-        public string TELEPHONE { get; set; }
+        public string? TELEPHONE { get; set; }
 
         /// <summary>
         /// 傳真
         /// </summary>
         [DisplayName("傳真")]
-        public string FAX { get; set; }
+        public string? FAX { get; set; }
 
         /// <summary>
         /// 密碼
@@ -78,25 +78,25 @@ namespace bookMaintain.Model.BackEnd.Arg.BookMaintain
         /// 備註
         /// </summary>
         [DisplayName("備註")]
-        public string REMEMBER_TOKEN { get; set; }
+        public string? REMEMBER_TOKEN { get; set; }
 
         /// <summary>
         /// 創建時間
         /// </summary>
         [DisplayName("創建時間")]
-        public string CREATE_DATE { get; set; }
+        public string? CREATE_DATE { get; set; }
 
         /// <summary>
         /// 創建者
         /// </summary>
         [DisplayName("創建者")]
-        public string CREATE_USER { get; set; }
+        public string? CREATE_USER { get; set; }
 
         /// <summary>
         /// 更改時間
         /// </summary>
         [DisplayName("更改時間")]
-        public string MODIFY_DATE { get; set; }
+        public string? MODIFY_DATE { get; set; }
 
         /// <summary>
         /// 更改使用者

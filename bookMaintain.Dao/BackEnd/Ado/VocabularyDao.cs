@@ -22,7 +22,7 @@ namespace bookMaintain.Dao.Ado
         /// <returns></returns>
         private string GetDBConnectionString()
         {
-            return bookMaintain.Common.ConfigTool.GetDBConnectionString();
+            return bookMaintain.Common.ConfigTool.GetDBConnectionString("ConnectionStrings:Default");
         }
 
         public int GetNetBookNumber()
@@ -133,7 +133,7 @@ namespace bookMaintain.Dao.Ado
             /// </summary>
             /// <returns></returns>
             //
-            public int InsertVocabulary(InsertArg insertArg)
+            public async Task<int> InsertVocabulary(InsertArg insertArg)
             {
 
             FileInfo fi = new FileInfo(insertArg.English_File.FileName);
@@ -179,6 +179,7 @@ namespace bookMaintain.Dao.Ado
                             Example_Sentences = searchDt.Rows[0][1].ToString();
                             Example_Sentences_Translation = searchDt.Rows[0][2].ToString();
                         }
+                        //EXEC [dbo].[getEmployeeDetails] @States = '老娘棒棒很大之';
                         string updateVocabulary = @"UPDATE Vocabulary
                                                    SET
                                                        Example_Sentences             = @Example_Sentences,
@@ -192,7 +193,7 @@ namespace bookMaintain.Dao.Ado
                         insertCmd.Parameters.Add(new SqlParameter("@Example_Sentences_Translation", Example_Sentences_Translation+insertArg.Example_Sentences_Translation));
                         insertCmd.Parameters.Add(new SqlParameter("@Chances", vocabularyChances));
                         insertCmd.Parameters.Add(new SqlParameter("@English_Name", insertArg.English_Name));
-                        insertCmd.ExecuteNonQuery();
+                        await insertCmd.ExecuteNonQueryAsync();
                     }
                     else
                     {
@@ -231,7 +232,8 @@ namespace bookMaintain.Dao.Ado
                         insertCmd.Parameters.Add(new SqlParameter("@Perfect_Tense", insertArg.Perfect_Tense));
                         insertCmd.Parameters.Add(new SqlParameter("@Created_At", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")));
                         insertCmd.Parameters.Add(new SqlParameter("@Updated_At", System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")));
-                        vocabularyId = Convert.ToInt32(insertCmd.ExecuteScalar());
+                        //vocabularyId = Convert.ToInt32(insertCmd.ExecuteScalar());
+                        vocabularyId = Convert.ToInt32(insertCmd.ExecuteScalarAsync());
                     }
                     transaction.Commit();
                     conn.Close();

@@ -9,7 +9,7 @@ namespace bookMaintain.Model.BackEnd.Arg.Select
         /// select種類
         /// </summary>
         [DisplayName("select種類")]
-        public string type { get; set; }
+        public string? type { get; set; }
 
     }
 }

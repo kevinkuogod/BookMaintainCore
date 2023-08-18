@@ -23,7 +23,7 @@ namespace bookMaintain.Dao.BackEnd.Context
     {
         private string GetDBConnectionString()
         {
-            return bookMaintain.Common.ConfigTool.GetDBConnectionString();
+            return bookMaintain.Common.ConfigTool.GetDBConnectionString("ConnectionStrings:Default");
         }
 
         /// <summary>
@@ -32,9 +32,9 @@ namespace bookMaintain.Dao.BackEnd.Context
         /// BookData
         /// </summary>
         /// <returns></returns>
-        public List<Book> GetTable(SearchArg arg)
+        public List<ChatroomContent> GetTable(SearchArg arg)
         {
-            List<Book> bookData = new List<Book>();//不能為null
+            List<ChatroomContent> bookData = new List<ChatroomContent>();//不能為null
             /*var optionsBuilder = new DbContextOptionsBuilder<BookContext>();
             optionsBuilder.UseSqlServer(GetDBConnectionString());
             var context = new BookContext(optionsBuilder.Options);
@@ -70,7 +70,7 @@ namespace bookMaintain.Dao.BackEnd.Context
             foreach (var row in bookDatas)
             {
                 bookData.Add(
-                    new Book()
+                    new ChatroomContent()
                     {
                         BOOK_ID = row.BOOK_ID,
                         BOOK_NAME = row.BOOK_NAME.ToString(),

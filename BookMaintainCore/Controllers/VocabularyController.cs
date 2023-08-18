@@ -83,7 +83,7 @@ namespace BookMaintain.Controllers
                         English_File = formData.English_File
                     };
 
-                    int errorNumber = vocabularyService.InsertVocabulary(vocabularyInsert);
+                    int errorNumber = await vocabularyService.InsertVocabulary(vocabularyInsert);
                     if (errorNumber > 0)
                     {
                         return this.Json(new { type = "insert", message = "新增成功" });

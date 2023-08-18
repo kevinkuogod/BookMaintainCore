@@ -38,7 +38,7 @@ namespace bookMaintain.Service
         {
             return bookMaintainDao.GetTable(arg);
         }*/
-        public List<Book> GetTable(SearchArg arg)
+        public List<ChatroomContent> GetTable(SearchArg arg)
         {
             return bookMaintainDao.GetTable(arg);
         }

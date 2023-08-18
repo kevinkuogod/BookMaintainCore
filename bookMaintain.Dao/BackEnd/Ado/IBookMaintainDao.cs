@@ -8,7 +8,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
     {
         int DeleteBookMaintain(int bookId);
         List<InputListValue> GetInputTableBootstarp(string tableName, string type);
-        List<Book> GetTable(SearchArg arg);
+        List<ChatroomContent> GetTable(SearchArg arg);
         int InsertBookMaintain(InsertArg insertArg);
         int UpdateBookMaintain(UpdatePost updateBookMaintainPost);
         int GetNetBookNumber();

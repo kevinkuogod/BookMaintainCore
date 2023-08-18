@@ -20,7 +20,8 @@
 		<!--輸出的檔案名稱及路徑-->
 		<!--<file value="C:/ ${test}date _losg.txt" />-->
 
-		<file type="log4net.Util.PatternString" value="C:/Log/[bookMaintain]%date{yyyy-MM-dd}.log" />
+		<!--<file type="log4net.Util.PatternString" value="C:/Log/[bookMaintain]%date{yyyy-MM-dd}.log" />-->
+		<file type="log4net.Util.PatternString" value="/var/log/net/[bookMaintain]%date{yyyy-MM-dd}.log" />
 		<rollingStyle value="Date" />
 		<datePattern value="yyyy-MM-dd" />
 		<!--記錄log到檔案時,是否累加,true表累加,false表不累加-->
