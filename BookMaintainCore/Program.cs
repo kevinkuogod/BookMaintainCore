@@ -105,8 +105,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseCors(MyAllowSpecificOrigins);//跨域
-//app.UseCors();
+//app.UseCors(MyAllowSpecificOrigins);//跨域
+app.UseCors();
 
 app.UseAuthorization();//授權
 app.UseAuthentication();//驗證
