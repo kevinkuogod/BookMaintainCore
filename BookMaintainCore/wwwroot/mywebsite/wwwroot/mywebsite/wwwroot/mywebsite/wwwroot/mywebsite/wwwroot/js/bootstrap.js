@@ -964,7 +964,7 @@ function validation(validationObj) {
             }
         }
     });
-    systemData.data.append('MachineType', 'PhoneLoginState');
+    //systemData.data.append('MachineType', 'PhoneLoginState');
 }
 
 function getObjUrl(file) {

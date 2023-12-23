@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography.Xml;
+using bookMaintain.Common;
 
 namespace bookMaintain.Dao.BackEnd.Ado
 {
@@ -103,8 +104,8 @@ namespace bookMaintain.Dao.BackEnd.Ado
                     insertArg.PASSWORD = Convert.ToBase64String(buffer);//將加密後的位元組陣列轉換為字串
                 */
 
-
-                string salt = bookMaintain.Common.CreateRandom.createRandomString();
+                CreateRandom createRandom = new CreateRandom();
+                string salt = createRandom.createRandomString();
                 /*IIS 無法使用所以改方法
                 string KeyContainerName = null;
                 System.Security.Cryptography.CspParameters param = new System.Security.Cryptography.CspParameters();

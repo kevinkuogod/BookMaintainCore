@@ -16,13 +16,14 @@ namespace BookMaintain.Controllers
     public class BookMaintainController : Controller
     {
         //private IBookMaintainService bookMaintainService { get; set; }
-        private IBookMaintainService bookMaintainService;
+        private IBookMaintainService bookMaintainService; //測試依賴注入
         private IBookLendRecordService bookLendRecordService;
         private ISelectService selectService;
         private IRegisterService registerService;
-        public BookMaintainController()
+        public BookMaintainController(IBookMaintainService _bookMaintainService)
         {
-            this.bookMaintainService   = new BookMaintainService();
+            this.bookMaintainService = _bookMaintainService;
+            //this.bookMaintainService   = new BookMaintainService();
             this.selectService         = new SelectService();
             this.bookLendRecordService = new BookLendRecordService();
             this.registerService       = new RegisterService();
@@ -33,7 +34,7 @@ namespace BookMaintain.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         //[Authorize(Roles = "Administrator")]
         //[Authorize]
         //[Authorize(roles = "Admin")] 使用 roles 屬性的話，就會自動讀取 ClaimTypes.Role 的內容。

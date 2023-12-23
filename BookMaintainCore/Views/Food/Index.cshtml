@@ -1,0 +1,220 @@
+﻿<div class="alert alert-primary" role="alert">
+    在線人數:<div style="display : inline-block" id="loginNumber">0</div>人
+</div>
+<button>最受注目商品(點閱數)</button>
+<button>最不熱門商品(點閱數)</button>
+<button>最佳銷售商品(銷售量)</button>
+<button>最佳差商品(銷售量)</button>
+<button>最高利潤商品(利潤比)</button>
+<button>最低利潤商品(利潤比)</button>
+<!-- 橫幅bar -->
+    <!-- windows用蓋的，有資料就重蓋 -->
+    <div class="table-responsive">
+           <table id="example" class="table">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>creatE_DATE</th>
+                        <th>type</th>
+                        <th>price</th>
+                        <th>quantity</th>
+                        <th>刪除</th>
+                        <th>編輯</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>creatE_DATE</th>
+                    <th>type</th>
+                    <th>price</th>
+                    <th>quantity</th>
+                    <th>刪除</th>
+                    <th>編輯</th>
+                    </tr>
+                </tfoot>
+            </table>
+    </div>
+
+<!-- Modal 要寫一個id放這邊隱藏 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- Flexbox container for aligning the toasts -->
+    <!--<div aria-live="polite" aria-atomic="true" class="d-flex justify-content-center align-items-center w-100">-->
+    <!-- Then put toasts within -->
+    <!--<div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <img src="..." class="rounded me-2" alt="...">
+                <strong class="me-auto">Bootstrap</strong>
+                <small>11 mins ago</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                Hello, world! This is a toast message.
+            </div>
+        </div>
+    </div>-->
+    <!---------------------------------------------------------------------------------------------------------------------------------浮動視窗-->
+    <!--
+    insert update 要上
+    https://getbootstrap.com/docs/5.2/components/popovers/
+    提示視窗
+        https://getbootstrap.com/docs/5.2/components/toasts/
+    -->
+    <!-- Button trigger modal -->
+    <!--
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+        Launch static backdrop modal
+    </button>
+    -->
+    <!-- Vertically centered scrollable modal -->
+    <!--
+    <div id="staticBackdrop" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        ...
+    </div>
+     -->
+    <!--
+    文章list
+    https://getbootstrap.com/docs/5.2/components/spinners/
+    Spinners
+    -->
+@Html.AntiForgeryToken()
+<div id="myplot"></div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://kevinkuotest.ddns.net/js/plot@0.6.js"></script>
+<script>
+    /*const plot = Plot.rectY({ length: 10000 }, Plot.binX({ y: "count" }, { x: Math.random })).plot();
+    const div = document.querySelector("#myplot");
+    div.append(plot);*/
+
+        var xmlhttp = false;
+        if (window.XMLHttpRequest) { 									//Mozilla、Safari等IE瀏覽器;
+            xmlhttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) { 								//相容IE瀏覽器
+            try {
+                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+                try {
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e) { }
+            }
+        }
+        xmlhttp.open('GET', '/Login/GetLoninNumber');
+        xmlhttp.setRequestHeader('__RequestVerificationToken', document.getElementsByName("__RequestVerificationToken")[0].value);
+        xmlhttp.send();
+        xmlhttp.onload = function (e) {
+            if (this.status == 200 || this.status == 204) {
+                successData = JSON.parse(this.responseText);
+                document.getElementById("loginNumber").innerHTML = successData.message;
+                //alert(this.responseText.message);
+            }else{
+                alert(this.responseText);
+            }
+        };
+
+
+        //https://datatables.net/examples/styling/bootstrap5.html
+        $(document).ready(function () {
+           var table = $('#example').DataTable({
+            processing: true,
+            serverSide: true,
+            destroy: true,
+            ajax: {
+                url: '/Food/GetFoodPageMysql',
+                type: 'GET',
+                //data: {
+                //    formName: 'afscpMcn',
+                //    action: 'search'
+                //},
+                /*data: function (data) {
+                    console.log(data);
+                    // 在这里可以传递额外的数据到服务器端，包括页数
+                    data.page = data.start / data.length + 1;
+                },*/
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'name' },
+                { data: 'creatE_DATE' },
+                { data: 'type' },
+                { data: 'price' },
+                { data: 'quantity' },
+                { data: null,
+                    //defaultContent: '<button>Click!</button>',
+                    //targets: -1
+                        render: function (data, type) {
+                        console.log(data);
+                        console.log(type);
+                            //return '<a href="' + link + '">' + data + '</a>';
+                        return '<button onclick="deleteFood(' + data.id  + ')">刪除</button>';
+                        }
+                },
+                {
+                    data: null,
+                    //defaultContent: '<button>Click!</button>',
+                    //targets: -1
+                    render: function (data, type) {
+                        console.log(data);
+                        console.log(type);
+                        //return '<a href="' + link + '">' + data + '</a>';
+                        return '<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> 編輯 </button>';
+                    }
+                },
+                
+            ]
+               // pages: 5, // number of pages to cache
+            });
+
+            xmlhttp.open('GET', '/Food/GetFoodOrderQuantity');
+            xmlhttp.setRequestHeader('__RequestVerificationToken', document.getElementsByName("__RequestVerificationToken")[0].value);
+            xmlhttp.send();
+            xmlhttp.onload = function (e) {
+                if (this.status == 200 || this.status == 204) {
+                    successData = JSON.parse(this.responseText);
+                    const plot = Plot.plot({
+                        marginTop: 20,
+                        marginRight: 10,
+                        marginBottom: 42,
+                        marginLeft: 150,
+                        grid: true,
+                        marks: [
+                            Plot.barX(successData,{ x: "orderQuantity",y: "name", fill: "green", tip: true}),
+                            Plot.frame()
+                        ]
+                    })
+                    const div = document.querySelector("#myplot");
+                    div.append(plot);
+                    //alert(this.responseText.message);
+                } else {
+                    alert(this.responseText);
+                }
+            };
+        });
+
+        /*暫時沒辦法設定按鍵
+        table.on('click', 'button', function (e) {
+            console.log(e.target.closest('tr'));
+            console.log(table.row(e.target.closest('tr')));
+            let data = table.row(e.target.closest('tr')).data();
+            alert(data.name + "'s salary is: " + data.price);
+        });*/
+</script>

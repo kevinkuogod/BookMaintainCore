@@ -24,6 +24,7 @@ using SqlDataAdapter = Microsoft.Data.SqlClient.SqlDataAdapter;
 using log4net;
 using static bookMaintain.Dao.BackEnd.Ado.LoginDao;
 using SqlTransaction = Microsoft.Data.SqlClient.SqlTransaction;
+using System.Reflection.PortableExecutable;
 
 namespace bookMaintain.Dao.BackEnd.Ado
 {
@@ -90,6 +91,25 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 //1234567gpvYVv8r
                 if ((insertArg.Password + loginResult["Salt"].ToString()).Equals(decryptdatastring, StringComparison.CurrentCulture))
                 {
+                    string setStatusSql = "";
+                    if (insertArg.MachineType.Equals("PhoneLoginState", StringComparison.CurrentCulture))
+                    {
+                        setStatusSql = @"UPDATE CUSTOMERS SET PhoneLoginState=1 WHERE EMAIL=@EMAIL";
+                    }
+                    else if (insertArg.MachineType.Equals("WebLoginState", StringComparison.CurrentCulture))
+                    {
+                        setStatusSql = @"UPDATE CUSTOMERS SET WebLoginState=1 WHERE EMAIL=@EMAIL";
+                    }
+                    MySqlConnection updateLogInStatus = new MySqlConnection();
+                    updateLogInStatus.ConnectionString = this.GetDBConnectionString("ConnectionStrings:DefaultMysql");
+                    updateLogInStatus.Open();
+                    MySqlCommand cmd = new MySqlCommand(setStatusSql, updateLogInStatus);
+                    cmd.Parameters.Add(new MySqlParameter("@EMAIL", insertArg.Email));
+                    MySqlTransaction transaction = updateLogInStatus.BeginTransaction();
+                    cmd.ExecuteNonQuery();
+                    transaction.Commit();
+                    updateLogInStatus.Close();
+
                     loginObject.loginStatus = 1;
                     loginObject.loginName = loginResult["LAST_NAME"].ToString() + loginResult["FIRST_NAME"].ToString();
                     return loginObject;
@@ -104,6 +124,18 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 return loginObject;
             }
         }
+
+        public int LoginNumber()
+        {
+            string sql = @"SELECT SUM(WebLoginState)+(SELECT SUM(PhoneLoginState) FROM Test.CUSTOMERS)-(SELECT COUNT(PhoneLoginState) FROM Test.CUSTOMERS WHERE PhoneLoginState=1 AND WebLoginState=1) as CountLogin FROM Test.CUSTOMERS;";
+            MySqlConnection updateLogInStatus = new MySqlConnection();
+            updateLogInStatus.ConnectionString = this.GetDBConnectionString("ConnectionStrings:DefaultMysql");
+            updateLogInStatus.Open();
+            MySqlCommand cmd = new MySqlCommand(sql, updateLogInStatus);
+            int countLogin = Convert.ToInt32(cmd.ExecuteScalar());
+            return countLogin;
+        }
+
         public dynamic Insert(Login insertArg)
         {
             using (SqlConnection conn = new SqlConnection(this.GetDBConnectionString()))
@@ -251,8 +283,8 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 SqlTransaction transaction;
                 transaction = conn.BeginTransaction();
                 SqlCommand cmd = new SqlCommand(sql, conn);
-
-                string salt = bookMaintain.Common.CreateRandom.createRandomString();
+                CreateRandom createRandom = new CreateRandom();
+                string salt = createRandom.createRandomString();
                 string KeyContainerName = null;
                 System.Security.Cryptography.CspParameters param = new System.Security.Cryptography.CspParameters();
                 param.KeyContainerName = KeyContainerName ?? salt; //密匙容器的名称，保持加密解密一致才能解密成功

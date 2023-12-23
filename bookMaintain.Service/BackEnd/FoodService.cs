@@ -1,5 +1,6 @@
 ﻿using bookMaintain.Dao.Ado;
 using bookMaintain.Dao.BackEnd.Ado;
+using bookMaintain.Model.BackEnd.Arg.Food;
 using bookMaintain.Model.BackEnd.Table.Food;
 
 namespace bookMaintain.Service
@@ -30,9 +31,24 @@ namespace bookMaintain.Service
         {
             return await articleDao.GetFood(/*conmment*/);
         }
-        public List<Food> GetFoodMysql(/*string conmment*/)
+        
+        public FoodPageData GetFoodPageMysql(DataTablesRequest FoodPage)
+        {
+            return articleDao.GetFoodPageMysql(FoodPage);
+        }
+        public List<Food> GetFoodMysql()
         {
             return articleDao.GetFoodMysql();
+        }
+
+        public List<FoodOrderQuantity> GetFoodOrderQuantity()
+        {
+            return articleDao.GetFoodOrderQuantity();
+        }
+
+        public int BuyFood(dynamic buyFood)
+        {
+            return articleDao.BuyFood(buyFood);
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿<!-- 橫幅bar -->
+﻿<div class="alert alert-primary" role="alert">
+    在線人數:<div style="display : inline-block" id="loginNumber">0</div>人
+</div>
+<!-- 橫幅bar -->
 <div class="row">
     <!-- bootstarp Carousel -->
     <div class="col-1"></div>
@@ -189,13 +192,9 @@
     <div id="indexForm" class="row"></div>
     <div class="modal" tabindex="-1" id="alertModal"></div>
     <!-- windows用蓋的，有資料就重蓋 -->
-    <div class="row">
-        <div class="col-12">
-            <!--
-            <div id="searchTable">
-            </div>
-            -->
-            <table id="example" class="display" style="width:100%">
+<!--table-responsive  table可以手機不會破版-->
+<div class="table-responsive">
+    <table id="example" class="table">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -217,10 +216,7 @@
                     </tr>
                 </tfoot>
             </table>
-        </div>
     </div>
-
-    <div id="BookLendRecordWindow"><div id="bookLendRecordTbody"></div></div>
 
     <div>
         <!-- 因為頁面還有其他的元件，不要用頁面錯誤提示 -->
@@ -266,6 +262,34 @@
     Spinners
     -->
     <script>
+        var xmlhttp = false;
+        if (window.XMLHttpRequest) { 									//Mozilla、Safari等IE瀏覽器;
+            xmlhttp = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) { 								//相容IE瀏覽器
+            try {
+                xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
+                try {
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                } catch (e) { }
+            }
+        }
+
+        xmlhttp.open('GET', '/Login/GetLoninNumber');
+        xmlhttp.setRequestHeader('__RequestVerificationToken', document.getElementsByName("__RequestVerificationToken")[0].value);
+        xmlhttp.send();
+        xmlhttp.onload = function (e) {
+            if (this.status == 200 || this.status == 204) {
+                successData = JSON.parse(this.responseText);
+                document.getElementById("loginNumber").innerHTML = successData.message;
+                //alert(this.responseText.message);
+            }else{
+                alert(this.responseText);
+            }
+        };
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
         let myModal = {
             alertModal: null
         };

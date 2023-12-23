@@ -14,6 +14,11 @@ using Azure.Core;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using MySql.Data.MySqlClient;
 using bookMaintain.Model.BackEnd.Arg.Vocabulary;
+using Microsoft.EntityFrameworkCore.Storage;
+using bookMaintain.Model.BackEnd.Arg.Food;
+using Org.BouncyCastle.Asn1.Ocsp;
+using MySqlX.XDevAPI.Common;
+using MySqlX.XDevAPI;
 
 namespace bookMaintain.Dao.BackEnd.Ado
 {
@@ -148,7 +153,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
             return bookMaintain.Common.ConfigTool.GetDBConnectionString(connString);
         }
 
-        public List<Food> GetFoodMysql(/*SearchArg arg*/)
+        public List<Food> GetFoodMysql()
         {
             string sql = @"SELECT ID,ImgSrc,Type,Quantity,Content,CREATE_DATE,CREATE_USER,MODIFY_DATE,MODIFY_USER,Name,Price FROM Item";
             DataTable mysqldt = new DataTable();
@@ -175,7 +180,7 @@ namespace bookMaintain.Dao.BackEnd.Ado
                 {
                     DataRow dataRow = mysqldt.NewRow();
                     dataRow["ID"] = Reader.GetString(0);
-                    Console.WriteLine("ID:"+ Reader.GetString(0));
+                    Console.WriteLine("ID:" + Reader.GetString(0));
                     dataRow["ImgSrc"] = Reader.GetString(1);
                     Console.WriteLine("ImgSrc:" + Reader.GetString(1));
                     dataRow["Type"] = Reader.GetString(2);
@@ -217,6 +222,138 @@ namespace bookMaintain.Dao.BackEnd.Ado
             }).ToList();
 
             return listName;
+        }
+        public FoodPageData GetFoodPageMysql(DataTablesRequest FoodPage)
+        {
+            string sql = @"SELECT ID,ImgSrc,Type,Quantity,Content,CREATE_DATE,CREATE_USER,MODIFY_DATE,MODIFY_USER,Name,Price FROM Item LIMIT @start, @length";
+            DataTable mysqldt = new DataTable();
+            mysqldt.Columns.Add(new DataColumn("ID", typeof(int)));
+            mysqldt.Columns.Add(new DataColumn("ImgSrc", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("Type", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("Quantity", typeof(int)));
+            mysqldt.Columns.Add(new DataColumn("Content", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("CREATE_DATE", typeof(DateTime)));
+            mysqldt.Columns.Add(new DataColumn("CREATE_USER", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("MODIFY_DATE", typeof(DateTime)));
+            mysqldt.Columns.Add(new DataColumn("MODIFY_USER", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("Name", typeof(string)));
+            mysqldt.Columns.Add(new DataColumn("Price", typeof(int)));
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = this.GetDBConnectionString("ConnectionStrings:DefaultMysql");
+            if (conn.State != ConnectionState.Open)
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
+                cmd.Parameters.Add(new MySqlParameter("@start", FoodPage.Start));
+                cmd.Parameters.Add(new MySqlParameter("@length", FoodPage.Length));
+                MySqlDataReader Reader = cmd.ExecuteReader();
+
+                while (Reader.Read())
+                {
+                    DataRow dataRow = mysqldt.NewRow();
+                    dataRow["ID"] = Reader.GetString(0);
+                    Console.WriteLine("ID:" + Reader.GetString(0));
+                    dataRow["ImgSrc"] = Reader.GetString(1);
+                    Console.WriteLine("ImgSrc:" + Reader.GetString(1));
+                    dataRow["Type"] = Reader.GetString(2);
+                    Console.WriteLine("Type:" + Reader.GetString(2));
+                    dataRow["Quantity"] = Reader.GetString(3);
+                    Console.WriteLine("Quantity:" + Reader.GetString(3));
+                    dataRow["Content"] = Reader.GetString(4);
+                    Console.WriteLine("Content:" + Reader.GetString(4));
+                    dataRow["CREATE_DATE"] = Reader.GetString(5);
+                    Console.WriteLine("CREATE_DATE:" + Reader.GetString(5));
+                    dataRow["CREATE_USER"] = Reader.GetString(6);
+                    Console.WriteLine("CREATE_USER:" + Reader.GetString(6));
+                    dataRow["MODIFY_DATE"] = Reader.GetString(7);
+                    Console.WriteLine("MODIFY_DATE:" + Reader.GetString(7));
+                    dataRow["MODIFY_USER"] = Reader.GetString(8);
+                    Console.WriteLine("MODIFY_USER:" + Reader.GetString(8));
+                    dataRow["Name"] = Reader.GetString(9);
+                    Console.WriteLine("Name:" + Reader.GetString(9));
+                    dataRow["Price"] = Reader.GetString(10);
+                    Console.WriteLine("Price:" + Reader.GetString(10));
+                    mysqldt.Rows.Add(dataRow);
+                }
+                conn.Close();
+            }
+
+            List<Food> listName = mysqldt.AsEnumerable().Select(m => new Food()
+            {
+                ID = m.Field<int>("ID"),
+                ImgSrc = m.Field<string>("ImgSrc"),
+                Type = m.Field<string>("Type"),
+                Quantity = m.Field<int>("Quantity"),
+                Content = m.Field<string>("Content"),
+                CREATE_DATE = m.Field<DateTime>("CREATE_DATE"),
+                CREATE_USER = m.Field<string>("CREATE_USER"),
+                MODIFY_DATE = m.Field<DateTime>("MODIFY_DATE"),
+                MODIFY_USER = m.Field<string>("MODIFY_USER"),
+                Name = m.Field<string>("Name"),
+                Price = m.Field<int>("Price"),
+            }).ToList();
+
+            return new FoodPageData()
+            {
+                Draw = FoodPage.Draw,
+                RecordsTotal = 16,
+                RecordsFiltered = 16,
+                Data = listName
+            };
+        }
+
+        public int BuyFood(dynamic buyFoods)
+        {
+            string sql = "INSERT INTO MainOrder(MainOrderDate) VALUES(@MainOrderDate);SELECT LAST_INSERT_ID();";
+            string currentDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = this.GetDBConnectionString("ConnectionStrings:DefaultMysql");
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            cmd.Parameters.Add(new MySqlParameter("@MainOrderDate", currentDate));
+            conn.Open();
+            int FoodOrderId = Convert.ToInt32(cmd.ExecuteScalar());
+            foreach (var buyFood in buyFoods)
+            {
+                int tmpNumber = Convert.ToInt32(buyFood.number);
+                for (var foodNumber=0; foodNumber< tmpNumber; foodNumber++)
+                {
+                    sql = "INSERT INTO DetailOrder(MainOrderID,ItemID,Quantity,Make,DetailOrderDate) VALUES(@MainOrderID,@ItemID,@Quantity,@Make,@DetailOrderDate);";
+                    cmd = new MySqlCommand(sql, conn);
+                    cmd.Parameters.Add(new MySqlParameter("@MainOrderID", FoodOrderId));
+                    cmd.Parameters.Add(new MySqlParameter("@ItemID", buyFood.id));
+                    cmd.Parameters.Add(new MySqlParameter("@Quantity", 1));
+                    cmd.Parameters.Add(new MySqlParameter("@Make", 0));
+                    cmd.Parameters.Add(new MySqlParameter("@DetailOrderDate", currentDate));
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            conn.Close();
+            return 1;
+        }
+
+        public List<FoodOrderQuantity> GetFoodOrderQuantity()
+        {
+            string sql = "SELECT Name,SUM(DetailOrder.Quantity) as Quantity FROM Test.DetailOrder inner join Test.Item on Item.ID=DetailOrder.ItemID group by Name;";
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = this.GetDBConnectionString("ConnectionStrings:DefaultMysql");
+            MySqlCommand cmd = new MySqlCommand(sql, conn);
+            conn.Open();
+            MySqlDataReader Reader = cmd.ExecuteReader();
+            List <FoodOrderQuantity> result = new List<FoodOrderQuantity>();
+            DataTable mysqldt = new DataTable();
+            while (Reader.Read())
+            {
+                DataRow dataRow = mysqldt.NewRow();
+                result.Add(
+                        new FoodOrderQuantity()
+                        {
+                            Name = Reader.GetString(0),
+                            OrderQuantity = Reader.GetUInt16(1)
+                        }
+                    );
+            }
+            conn.Close();
+            return result;
         }
     }
 }

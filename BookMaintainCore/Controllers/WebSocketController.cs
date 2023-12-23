@@ -11,9 +11,10 @@ using System.Text;
 
 namespace BookMaintainCore.Controllers
 {
+
     public class WebSocketController : Controller //ControllerBase
     {
-        [HttpGet]
+        [Route("backend/[controller]/Index")]
         public ActionResult Index()
         {
             return View();

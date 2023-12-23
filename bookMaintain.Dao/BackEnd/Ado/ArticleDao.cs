@@ -32,12 +32,15 @@ namespace bookMaintain.Dao.BackEnd.Ado
         //
         public async Task<int> EditorFile(IFormFile file)
         {
+            //byte[] buf1 = new Byte[] { 77, 66, 55 };
+
             try
             {
                 FileInfo fi = new FileInfo(file.FileName);
                 string path = "C:\\Users\\kevin\\Desktop\\" + fi.Name;
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
+                    //fileStream.Write(buf1,0, buf1.Length);
                     await file.CopyToAsync(fileStream);
                 }
                 return 1;

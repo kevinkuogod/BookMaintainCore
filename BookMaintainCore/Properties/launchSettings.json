@@ -1,36 +1,28 @@
-﻿{
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:52190",
-      "sslPort": 44378
-    }
-  },
+{
   "profiles": {
     "BookMaintainCore": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7237;http://localhost:5237",
-      //"applicationUrl": "http://localhost:5237",
-      //"applicationUrl": "https://localhost:7237;",
-      //"applicationUrl": "http://114.44.126.185:2546",
+      "launchUrl": "http://localhost:5237/Login/Index",
+      //"launchUrl": "http://192.168.2.25:5237/Login/Index",
+      //"launchUrl": "https://localhost:7237/Login/Index",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      "hotReloadEnabled": false,
+      "applicationUrl": "http://localhost:5237;https://localhost:7237"
+      //"applicationUrl": "http://localhost:5237"
+      //"applicationUrl": "http://192.168.2.25:5237"
+      //"applicationUrl": "https://localhost:7237"
     },
     "BookMaintainCoreProduction": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      //"applicationUrl": "http://114.44.126.185:8101",
-      //"applicationUrl": "http://localhost:5237",
-      //"applicationUrl": "https://localhost:7237;",
-      "applicationUrl": "https://localhost:7237;http://localhost:5237",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
-      }
+      },
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -38,6 +30,14 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:52190",
+      "sslPort": 44378
     }
   }
 }

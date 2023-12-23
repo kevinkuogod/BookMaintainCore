@@ -6,8 +6,10 @@ namespace bookMaintain.Dao.BackEnd.Ado
     {
         dynamic Insert(Login insertArg);
 
+        int ForgetPassword(Login forgetPasswordArg);
+
         dynamic InsertMysql(Login insertArg);
 
-        int ForgetPassword(Login forgetPasswordArg);
+        int LoginNumber();
     }
 }

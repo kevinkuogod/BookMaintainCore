@@ -23,7 +23,12 @@ namespace bookMaintain.Service
             //return registerDao.Insert(insertArg);
             return registerDao.InsertMysql(insertArg);
         }
-        
+
+        public int LoginNumber()
+        {
+            return registerDao.LoginNumber();
+        }
+
         public int ForgetPassword(Login forgetPasswordArg)
         {
             return registerDao.ForgetPassword(forgetPasswordArg);

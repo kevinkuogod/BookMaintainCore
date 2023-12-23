@@ -18,9 +18,12 @@ using Microsoft.AspNetCore.Cors;
 using Newtonsoft.Json.Linq;
 using Azure.Core;
 using System.Reflection.Metadata;
+using System.Drawing;
+//using System.Web;
 
 namespace BookMaintain.Controllers
 {
+    [Route("backend/[controller]")]
     public class LoginController : Controller
     {
         private ILoginService loginService;
@@ -33,11 +36,15 @@ namespace BookMaintain.Controllers
         /// 登入系統
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        //[HttpGet]
+        [HttpGet("Index")]
         public ActionResult Index()
         {
             try
             {
+                CreateRandom createRandomObj = new CreateRandom();
+                ViewBag.code = createRandomObj.createRandomString();
+                //HttpContext.Current.Session["LoginName"] = loginCode;
                 return View();
             }
             catch (Exception parameterEx)
@@ -51,7 +58,7 @@ namespace BookMaintain.Controllers
         /// 登入系統
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet("Logout")]
         public ActionResult Logout()
         {
             try
@@ -88,34 +95,41 @@ Login login = new Login()
     EMAIL = loginData.Email.Value,
     PASSWORD = loginData.Password.Value
 };*/
-        [HttpPost]
+        //[HttpPost]
+        [HttpPost("Insert")]
         //[EnableCors("MyPolicy")]
         [DisableCors]
         //public JsonResult Insert(Login loginJson)
-        public JsonResult Insert(Login loginJson)
+        public async Task<JsonResult> Insert(Login loginJson)
         {
             try
             {
                 Logger.Write(Logger.LogCategoryEnum.Error, "13");
                 Logger.Write(Logger.LogCategoryEnum.Error, loginJson.Email);
                 Logger.Write(Logger.LogCategoryEnum.Error, "33");
-
                 if (ModelState.IsValid)
                 {
                     var loginObject = loginService.Insert(loginJson);
                     if (loginObject.loginStatus == 1)
                     {
                         //Session["auth"] = true;
-                        var claims = new List<Claim>() {
-                            new Claim(ClaimTypes.NameIdentifier,"test"),
-                            new Claim(ClaimTypes.Name,loginJson.Email.ToString()),
-                            new Claim(ClaimTypes.Role, "Administrator")
-                        };
+                        /*
+                         //取用戶信息
+                         var userId = User.FindFirst(ClaimTypes.Sid).Value;
+                         var userName = User.Identity.Name;
+                         */
+                        /*//之後要開，new Claim(ClaimTypes.Sid,info.Id.ToString()), //用戶ID
+                         var claims = new List<Claim>() {
+                           new Claim(ClaimTypes.NameIdentifier,"test"),
+                           new Claim(ClaimTypes.Name,loginJson.Email.ToString()),
+                           new Claim(ClaimTypes.Role, "Administrator")
+                       };*/
                         //Initialize a new instance of the ClaimsIdentity with the claims and authentication scheme    
 
-                        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        /*之後要開
+                         * var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         var claimsIdentity = new ClaimsIdentity(
-                                           claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                                           claims, CookieAuthenticationDefaults.AuthenticationScheme);*/
                         var authProperties = new AuthenticationProperties
                         {
                             // 在此設定Cookies相關細節，如過期時間...等
@@ -145,9 +159,10 @@ Login login = new Login()
 
                         //HttpContext.SignInAsync(new ClaimsPrincipal(claimsIdentity));
 
-                        HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                        /*之後要開
+                         * HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
                                                         new ClaimsPrincipal(claimsIdentity),
-                                                        authProperties);
+                                                        authProperties);*/
                         return this.Json(new { type = "login", message = "登入成功", loginName = loginObject.loginName });
                  
                     }
@@ -247,6 +262,39 @@ Login login = new Login()
                            new { type = "login", message = "登入過程錯誤", code = (int)ErrorCode.ErrorCodeField.insertBookError }
                             , HttpStatusCode.InternalServerError);
             }
+        }
+
+        [HttpGet]
+        public JsonResult GetLoninNumber()
+        {
+            int loginNumber = loginService.LoginNumber();
+            return this.Json(new { type = "LoninNumber", message = loginNumber });
+        }
+
+        [HttpGet("GetValidateCode")]
+        public ActionResult GetValidateCode(string loginCode)
+        {
+            CreateRandom createRandomObj = new CreateRandom();
+            byte[] data = null;
+
+            string code = loginCode;
+            //定義一個畫板
+            MemoryStream ms = new MemoryStream();
+            using (Bitmap map = new Bitmap(150, 40))
+            {
+                //畫筆,在指定畫板畫板上畫圖
+                //g.Dispose();
+                using (Graphics g = Graphics.FromImage(map))
+                {
+                    g.Clear(Color.White);
+                    g.DrawString(code, new Font("黑體", 18.0F), Brushes.Blue, new Point(10, 8));
+                    //繪製干擾線(數字代表幾條)
+                    createRandomObj.PaintInterLine(g, 10, map.Width, map.Height);
+                }
+                map.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            data = ms.GetBuffer();
+            return File(data, "image/jpeg");
         }
     }
 }

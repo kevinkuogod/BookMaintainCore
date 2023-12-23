@@ -7,5 +7,7 @@ namespace bookMaintain.Service
         dynamic Insert(Login insertArg);
 
         int ForgetPassword(Login forgetPasswordArg);
+
+        int LoginNumber();
     }
 }

@@ -1,29 +1,40 @@
 ﻿<!-- 參考Floating labels -->
 <!-- 驗證搭配<div class="text-bg-danger p-3" id="serch_error" style="">Danger with contrasting color</div> -->
-<!-- Bootstarp Collapse -->
+<!-- Bootstarp Collapse is-invalid is-valid -->
 <div class="row">
     <div class="text-bg-secondary p-3" id="serch_error" style="">登入頁面</div>
 </div>
-<!--class="row g-3 needs-validation was-validated" novalidate=""-->
-<form id="loginForm">
-    <!--
-    <div class="mb-3 form-floating">
-        <input type="email" class="form-control is-valid" id="floatingInputInvalid" placeholder="name@example.com" value="test@example.com">
-        <label for="floatingInputInvalid">信箱帳號</label>
+
+
+<form id="loginForm" class="was-validated">
+    <div class="mb-3">
+        <label for="floatingInputInvalid" class="form-label">信箱帳號</label>
+        <input type="text" class="form-control" id="floatingInputInvalid" placeholder="name@example.com" required>
+        <div class="invalid-feedback">
+            請輸入信箱帳號
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="floatingInputInvalid2" class="form-label">密碼</label>
+        <input type="text" class="form-control" id="floatingInputInvalid2" placeholder="********" required>
+        <div class="invalid-feedback">
+            請輸入密碼
+        </div>
     </div>
     <div class="mb-3 form-floating">
-        <input type="password" class="form-control is-invalid" id="floatingInputInvalid2" placeholder="name@example.com" value="test@example.com">
-        <label for="floatingInputInvalid2">密碼</label>
+        <input type="text" class="form-control" id="floatingInputInvalid3" placeholder="name@example.com">
+        <label for="floatingInputInvalid3">機器型態</label>
     </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-            <label class="form-check-label" for="inlineRadio1">記住我</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-            <label class="form-check-label" for="inlineRadio2">不記住我</label>
-        </div>
-    -->
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+        <label class="form-check-label" for="inlineRadio1">記住我</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+        <label class="form-check-label" for="inlineRadio2">不記住我</label>
+    </div>
+    <input type="text" name="code" value=@ViewBag.code />
+    <img id="code" src="/backend/Login/GetValidateCode?loginCode=@ViewBag.code" />
     <!-- 需要移到到後台admin -->
     <!--
     <div class="alert alert-success" role="alert">
@@ -48,25 +59,80 @@
         </div>
     </div>
     -->
-    <!--
-    <button type="button" class="btn btn-primary" id="liveAlertBtn">
-        送出
-    </button>
-    -->
 </form>
+<button type="button" class="btn btn-primary" id="liveAlertBtn" onclick="login();">
+    送出
+</button>
+
+<!--
 <div class="row">
     <div id="transferForm" class="row"></div>
 </div>
 <div class="modal" tabindex="-1" id="alertModal"></div>
 <div class="modal" tabindex="-1" id="loginCheckModal"></div>
-
-
+-->
 <!--
     如果帳號打對了，就先所帳號
 <input class="form-control" type="text" value="Disabled readonly input" aria-label="Disabled input example" disabled readonly>
 -->
 <script>
-    let myModal = {
+    function determineLoginType() {
+        if (navigator.userAgent.match(/Android/i)
+            || navigator.userAgent.match(/webOS/i)
+            || navigator.userAgent.match(/iPhone/i)
+            || navigator.userAgent.match(/iPad/i)
+            || navigator.userAgent.match(/iPod/i)
+            || navigator.userAgent.match(/BlackBerry/i)
+            || navigator.userAgent.match(/Windows Phone/i)
+        ) {
+            return 'PhoneLoginState';
+        }
+        else {
+            return 'WebLoginState';
+        }
+
+        /*navigator.userAgent.match("Firefox")　//判斷是否為 FireFox
+        navigator.userAgent.match("MSIE")　//判斷是否為 IE
+        navigator.userAgent.match("Opera")　//判斷是否為 Opera
+        navigator.userAgent.match("Safari")　//判斷是否為 Safari 或 Google Chrome目前沒有方法*/
+    }
+    console.log(determineLoginType());
+    document.getElementById('floatingInputInvalid3').value = determineLoginType();
+
+    function login(){
+        let json = new FormData();
+        json.append('Email', document.getElementById('floatingInputInvalid').value);
+        json.append('Password', document.getElementById('floatingInputInvalid2').value);
+        json.append('MachineType', document.getElementById('floatingInputInvalid3').value);
+        console.log(document.getElementById('floatingInputInvalid3').value);
+        console.log(json);
+        $.ajax({
+            type: "post",
+            url: "/backend/Login/Insert",
+            data: json,
+            headers: { "__RequestVerificationToken": $("input[name='__RequestVerificationToken']").val() },
+            processData: false, // important// 告訴jquery不要去處理發送的數據
+            contentType: false, // important// 告訴Jquery不要去設定Content-type請求頭
+            mimeType: 'multipart/form-data',
+            //dataType: "json",
+            success: function (successData) {
+                console.log(successData);
+                successData = JSON.parse(successData);
+                if (successData.message == "登入成功") {
+                    console.log(successData);
+                    location.href = "/BookMaintain/Index";
+                } else {
+                    //ajaxBSError(successData);
+                    alert(successData.message);
+                }
+            },
+            error: function (error) {
+                //ajaxBSError(error);
+                alert(error);
+            }
+        });
+    }
+    /*let myModal = {
         alertModal: null,
         loginCheckModal: null
     };
@@ -201,5 +267,5 @@
             liKey: "loginFromButton"
         },
     ]
-    createObjet(returnFormObjet, "transferForm");
+    createObjet(returnFormObjet, "transferForm");*/
 </script>

@@ -1,4 +1,6 @@
-﻿using BookMaintainCore.Job;
+﻿using bookMaintain.Service;
+using BookMaintain.Controllers;
+using BookMaintainCore.Job;
 using log4net.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +8,10 @@ using Microsoft.Extensions.FileProviders;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IBookMaintainService, BookMaintainService>();
+
+//不開不能用
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -39,10 +45,11 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
+
 builder.Services.AddMvc();
 
 //加了這個之後驗會配上 [Authorize]，有家的都會被導到login
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+/*builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     //options.Cookie.Name = "UserLoginCookie";
     options.AccessDeniedPath = "/Login/ForgetPassword"; //權限
@@ -63,7 +70,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     //options.CookieManager = new ChunkingCookieManager();
 
 }
-);
+);*/
 /*.AddPolicy("RequireManagerOnly", policy =>
   policy.RequireRole("Manager", "Administrator"));*/
 

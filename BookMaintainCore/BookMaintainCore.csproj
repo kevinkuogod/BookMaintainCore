@@ -12,6 +12,11 @@
     <Content Remove="wwwroot\Img\input_bg.png" />
     <Content Remove="wwwroot\js\bootstrap.js" />
     <Content Remove="wwwroot\js\jquery-3.6.0.js" />
+    <Content Remove="wwwroot\new\Img\cherry_blossoms.png" />
+    <Content Remove="wwwroot\new\Img\ic_launcher.png" />
+    <Content Remove="wwwroot\new\Img\input_bg.png" />
+    <Content Remove="wwwroot\new\js\bootstrap.js" />
+    <Content Remove="wwwroot\new\js\jquery-3.6.0.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +35,11 @@
     <None Include="wwwroot\Img\input_bg.png" />
     <None Include="wwwroot\js\bootstrap.js" />
     <None Include="wwwroot\js\jquery-3.6.0.js" />
+    <None Include="wwwroot\new\Img\cherry_blossoms.png" />
+    <None Include="wwwroot\new\Img\ic_launcher.png" />
+    <None Include="wwwroot\new\Img\input_bg.png" />
+    <None Include="wwwroot\new\js\bootstrap.js" />
+    <None Include="wwwroot\new\js\jquery-3.6.0.js" />
   </ItemGroup>
 
   <ItemGroup>
